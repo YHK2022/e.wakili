@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models\Locations;
+namespace App\Models\Masterdata;
 
+use App\Models\Locations\Zone;
 use Illuminate\Database\Eloquent\Model;
 
 class Region extends Model

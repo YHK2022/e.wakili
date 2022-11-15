@@ -35,7 +35,7 @@
         <!-- Start Alert-->
             @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }} 
+                {{ session('success') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <i class="ik ik-x"></i>
                 </button>
@@ -43,13 +43,13 @@
             @endif
             @if (session('warning'))
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{ session('warning') }} 
+                {{ session('warning') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <i class="ik ik-x"></i>
                 </button>
             </div>
             @endif
-            @if($errors->any()) 
+            @if($errors->any())
                 @foreach($errors->all() as $error)
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     {{ $error }}
@@ -59,9 +59,9 @@
                     </div>
                 @endforeach
             @endif
-            
+
         <!-- End Alert-->
-        
+
         <div class="row">
         <div class="col-md-12">
             <div class="accordion" id="accordionExample">
@@ -87,7 +87,7 @@
                                     <div class="form-group">
                                     <label for="exampleSelectGender">Attended Ordinary Level Secondary Education in</label>
                                         <select name="olevel" class="form-control is-valid required" id="exampleSelectLevel" required>
-                                            <option value="{{$qualification->o_level}}">{{$qualification->o_level}}</option>    
+                                            <option value="{{$qualification->o_level}}">{{$qualification->o_level}}</option>
                                             <option value="Tanzania">Tanzania</option>
                                             <option value="Abroad">Abroad</option>
                                         </select>
@@ -97,20 +97,20 @@
                                     <div class="form-group">
                                         <label for="exampleSelectGender">Attended Advanced Level Secondary Education in</label>
                                         <select name="alevel" class="form-control is-valid" id="exampleSelectLevel" required>
-                                            <option value="{{$qualification->a_level}}">{{$qualification->a_level}}</option>    
+                                            <option value="{{$qualification->a_level}}">{{$qualification->a_level}}</option>
                                             <option value="Tanzania">Tanzania</option>
                                             <option value="Abroad">Abroad</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                     <label for="exampleSelectGender">Attended LLB in</label>
                                         <select name="llb" class="form-control is-valid" id="exampleSelectLlb" required>
-                                            <option value="{{$qualification->llb}}">{{$qualification->llb}}</option>    
+                                            <option value="{{$qualification->llb}}">{{$qualification->llb}}</option>
                                             <option value="Tanzania">Tanzania</option>
                                             <option value="Abroad">Abroad</option>
                                         </select>
@@ -120,7 +120,7 @@
                                     <div class="form-group">
                                         <label for="exampleSelectGender">Attended Legal Practice From Law School of Tanzania ?</label>
                                         <select name="lst" class="form-control is-valid" id="exampleSelectLst" required>
-                                            <option value="{{$qualification->lst}}">{{$qualification->lst}}</option>    
+                                            <option value="{{$qualification->lst}}">{{$qualification->lst}}</option>
                                             <option value="Yes">Yes</option>
                                             <option value="No">No</option>
                                         </select>
@@ -133,19 +133,20 @@
                                     <div class="form-group">
                                     <label for="exampleSelectGender">Names Validation</label>
                                         <select name="validation" class="form-control is-valid" id="exampleSelectValidation" required>
-                                            <option value="{{$qualification->names_validation}}">{{$qualification->names_validation}}</option>    
+                                            <option value="{{$qualification->names_validation}}">{{$qualification->names_validation}}</option>
                                             <option value="As Appeared in Academic Certificates">As Appeared in Academic Certificates</option>
                                             <option value="Changed">Changed</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <button type="submit" class="btn btn-danger mr-2">Save Changes</button>
+
+                            <button type="submit" class="btn btn-danger mr-2">Update Changes</button>
                             <button class="btn btn-default">Cancel</button>
+                            <a href="{{ url('petition/attachments') }}" class="btn btn-primary">Next</a>
                         </form>
                     </div>
-                    
+
                   </div>
                 </div>
                 </div>
@@ -173,7 +174,7 @@
                                     <div class="form-group">
                                     <label for="exampleSelectGender">Attended Ordinary Level Secondary Education in</label>
                                         <select name="olevel" class="form-control is-valid required" id="exampleSelectLevel" required>
-                                            <option value="">--Choose one--</option>    
+                                            <option value="">--Choose one--</option>
                                             <option value="Tanzania">Tanzania</option>
                                             <option value="Abroad">Abroad</option>
                                         </select>
@@ -183,20 +184,20 @@
                                     <div class="form-group">
                                         <label for="exampleSelectGender">Attended Advanced Level Secondary Education in</label>
                                         <select name="alevel" class="form-control is-valid" id="exampleSelectLevel" required>
-                                            <option value="">--Choose one--</option>    
+                                            <option value="">--Choose one--</option>
                                             <option value="Tanzania">Tanzania</option>
                                             <option value="Abroad">Abroad</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                     <label for="exampleSelectGender">Attended LLB in</label>
                                         <select name="llb" class="form-control is-valid" id="exampleSelectLlb" required>
-                                            <option value="">--Choose one--</option>    
+                                            <option value="">--Choose one--</option>
                                             <option value="Tanzania">Tanzania</option>
                                             <option value="Abroad">Abroad</option>
                                         </select>
@@ -206,7 +207,7 @@
                                     <div class="form-group">
                                         <label for="exampleSelectGender">Attended Legal Practice From Law School of Tanzania ?</label>
                                         <select name="lst" class="form-control is-valid" id="exampleSelectLst" required>
-                                            <option value="">--Choose one--</option>    
+                                            <option value="">--Choose one--</option>
                                             <option value="Yes">Yes</option>
                                             <option value="No">No</option>
                                         </select>
@@ -219,19 +220,19 @@
                                     <div class="form-group">
                                     <label for="exampleSelectGender">Names Validation</label>
                                         <select name="validation" class="form-control is-valid" id="exampleSelectValidation" required>
-                                            <option value="">--Choose one--</option>    
+                                            <option value="">--Choose one--</option>
                                             <option value="As Appeared in Academic Certificates">As Appeared in Academic Certificates</option>
                                             <option value="Changed">Changed</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <button type="submit" class="btn btn-danger mr-2">Save</button>
                             <button class="btn btn-default">Cancel</button>
                         </form>
                     </div>
-                    
+
                   </div>
                 </div>
                 </div>

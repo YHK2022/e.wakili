@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Petitions\FirmMembership;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,4 +13,13 @@ class Profile extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function advocate()
+    {
+        return $this->hasOne(Advocate::class);
+    }
+
+    public function firmMembership()
+    {
+        return $this->hasMany(FirmMembership::class);
+    }
 }

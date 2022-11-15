@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Models\Administrations;
+namespace App\Models\Masterdata;
 
-use App\Models\Locations\District;
 use Illuminate\Database\Eloquent\Model;
 
 class Firm extends Model
@@ -14,7 +13,7 @@ class Firm extends Model
 
     public function advocates()
     {
-        return $this->hasMany(Advocate::class);
+        return $this->hasMany(AdvocateCategory::class);
     }
 
     public function attorneys()

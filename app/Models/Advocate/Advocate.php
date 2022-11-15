@@ -2,7 +2,14 @@
 
 namespace App\Models\Advocate;
 
-class Advocate
+use App\Profile;
+use Illuminate\Database\Eloquent\Model;
+
+class Advocate extends Model
 {
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class, 'profile_id');
+    }
 
 }

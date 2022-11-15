@@ -2,7 +2,7 @@
 
 @section('title')
     @parent
-    | User Permissions
+    | Roll of Advocates
 @stop
 
 @section('content')
@@ -12,10 +12,10 @@
             <div class="row align-items-end">
                 <div class="col-lg-8">
                     <div class="page-header-title">
-                        <i class="ik ik-lock bg-red"></i>
+                        <i class="ik ik-users bg-red"></i>
                         <div class="d-inline">
-                            <h5>User Permissions</h5>
-                            <span>User Management</span>
+                                <h5>Roll of Advocates</h5>
+                            <span>Roll of Advocates</span>
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ url('auth/dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">User Permission</li>
+                            <li class="breadcrumb-item active" aria-current="page">Roll of Advocates</li>
                         </ol>
                     </nav>
                 </div>
@@ -61,174 +61,170 @@
             @endif
 
         <!-- End Alert-->
-        <div>
-            <a data-toggle="modal" data-target="#addPermission" title="Add Permission" class="btn btn-info btn-xm pull-right">
-                <i class="fa fa-plus"></i>
-                Add Permission
-            </a>
-            <!-- Add Permission Model-->
-            <div class="modal fade" id="addPermission" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <form class="forms-sample" method="POST" action="{{ url('user-management/permission/add')}}">
-                            {{ csrf_field() }}
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="demoModalLabel">Add User Permission</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                </div>
-                                <div class="modal-body">
 
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Permission Name</label>
-                                                <input type="text"  name="name" class="form-control  is-valid" placeholder="Permission Name" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="exampleInputConfirmPassword1">Display Name</label>
-                                                <input type="text"  name="display_name" class="form-control  is-valid" placeholder="Display Name" required>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Group Name</label>
-                                                <input type="text"  name="group_name" class="form-control  is-valid" placeholder="Group Name" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="exampleInputConfirmPassword1">Guard Name</label>
-                                                <input type="text"  name="guard_name" value="web" class="form-control  is-valid" placeholder="Guard Name" required readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-danger">Submit</button>
-                                </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br/>
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table table-hover" id="table_id">
-                            <thead>
-                            <tr>
-                                <th id="table_id" data-priority="1">#</th>
-                                <th id="table_id">Permission</th>
-                                <th id="table_id">Group Name</th>
-                                <th id="table_id" data-priority="2">Action</th>
+                        <div class="card">
+                            <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#all" role="tab" aria-controls="pills-timeline" aria-selected="true">ALL <span class="badge bg-warning" style="color: white">{{$all_count}}</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-timeline-tab" data-toggle="pill" href="#practising" role="tab" aria-controls="pills-timeline" aria-selected="true">PRACTISING <span class="badge bg-warning" style="color: white">{{$practising_count}}</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#non_practising" role="tab" aria-controls="pills-profile" aria-selected="false">NON PRACTISING <span class="badge bg-warning" style="color: white">{{$non_practising_count}}</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#suspended" role="tab" aria-controls="pills-setting" aria-selected="false">SUSPENDED <span class="badge bg-warning" style="color: white">{{$suspended_count}}</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#deferred" role="tab" aria-controls="pills-setting" aria-selected="false">DEFERRED <span class="badge bg-warning" style="color: white">{{$deferred_count}}</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#non_profit" role="tab" aria-controls="pills-setting" aria-selected="false">NON PROFIT <span class="badge bg-warning" style="color: white">{{$non_profit_count}}</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#retired" role="tab" aria-controls="pills-setting" aria-selected="false">RETIRED <span class="badge bg-warning" style="color: white">{{$retired_count}}</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#deceased" role="tab" aria-controls="pills-setting" aria-selected="false">DECEASED <span class="badge bg-warning" style="color: white">{{$deceased_count}}</span></a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="pills-tabContent">
 
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($permissions as $key => $permission)
-                                <tr>
-                                    <td id="table_id">{{++$key}}</td>
-                                    <td id="table_id">{{$permission->display_name}}</td>
-                                    <td id="table_id">{{$permission->group_name}}</td>
-                                    <td id="table_id">
-                                        <div class="table-actions">
-                                            <a href="#edit{{$permission->id}}" title="Edit" data-toggle="modal" data-id="{{ $permission->id }}" data-target="#edit{{$permission->id}}"><i class="ik ik-edit-2"></i></a>
-                                            <a href="#delete{{$permission->id}}" title="Delete" data-toggle="modal" data-id="{{ $permission->id }}" data-target="#delete{{$permission->id}}"><i class="ik ik-trash-2"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                                    <div class="card-body">
+                                        <table class="table table-hover" id="table_id">
+                                            <thead>
+                                            <tr>
+                                                <th id="table_id" data-priority="1">#</th>
+                                                <th id="table_id">Full Name</th>
+                                                <th id="table_id">Roll Number</th>
+                                                <th id="table_id">Admission Date</th>
+                                                <th id="table_id">Status</th>
+                                                <th id="table_id" data-priority="2">Action</th>
 
-                                <!-- Edit Permission Model-->
-                                <div class="modal fade" id="edit{{$permission->id}}" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <form class="forms-sample" method="POST" action="{{ url('user-management/permission/edit', $permission->id)}}">
-                                                {{ csrf_field() }}
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="demoModalLabel">Edit User Permission</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label for="exampleInputPassword1">Permission Name</label>
-                                                                <input type="text"  name="name" value="{{$permission->name}}" class="form-control  is-valid" placeholder="Permission Name" required>
-                                                            </div>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($all_advocates as $key => $advocate)
+                                                <tr>
+                                                    <td id="table_id">{{++$key}}</td>
+                                                    <td id="table_id">{{$advocate->profile->fullname}}</td>
+                                                    <td id="table_id">{{$advocate->roll_no}}</td>
+                                                    <td id="table_id">{{$advocate->admission}}</td>
+                                                    <td id="table_id">
+                                                        @if ($advocate->paid_year != $cur_year)
+                                                            <span class="badge bg-danger" style="color: white">Not Active</span>
+                                                        @else
+                                                            <span class="badge bg-success" style="color: white">Active</span>
+                                                        @endif
+                                                    </td>
+                                                    <td id="table_id">
+                                                        <div class="table-actions">
+                                                            <a href="{{ url('advocate/view', $advocate->uid) }}" title="View Profile" ><i class="ik ik-eye pull-left"></i></a>
                                                         </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label for="exampleInputConfirmPassword1">Display Name</label>
-                                                                <input type="text"  name="display_name" value="{{$permission->display_name}}" class="form-control  is-valid" placeholder="Display Name" required>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- View Advocate Model-->
+                                                <div class="modal fade" id="view{{$advocate->uid}}" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"><center>Advocate Profile</center></h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-lg-4 col-md-5">
+                                                                <div class="card">
+                                                                    <div class="card-body text-center">
+                                                                        <div class="profile-pic mb-20">
+
+                                                                            @if(!empty($profile->picture))
+                                                                                <img src="{{ asset('storage/files/'.$profile->picture) }}" width="150" class="rounded-circle" alt="user">
+                                                                            @else
+                                                                                <img src="{{ URL::to('images/user.png') }}" width="150" class="rounded-circle" alt="user">
+                                                                            @endif
+
+                                                                            @if ($advocate->paid_year != $cur_year)
+                                                                                <span class="badge bg-danger" style="color: white">Not Active Since {{$advocate->paid_year}}</span>
+                                                                            @else
+                                                                                <span class="badge bg-success" style="color: white">Active - {{$advocate->paid_year}}</span>
+                                                                            @endif
+
+                                                                            <h5 class="mt-20 mb-0">{{ $advocate->profile->fullname}}</h5>
+                                                                            <a style="font-size:17px;color:blue;" ><strong>{{$advocate->status}}</strong></a>
+                                                                        </div>
+                                                                        <div class="badge badge-pill badge-dark">Admission<br/>{{$advocate->admission}}</div>
+                                                                        <div class="badge badge-pill badge-dark">Roll No.<br/>{{$advocate->roll_no}}</div>
+                                                                    </div>
+
+                                                                    <hr class="mb-0">
+
+                                                                        <div class="card-body">
+                                                                            <h6 class="mt-30">Firm/Work Place:</h6>
+                                                                        </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label for="exampleInputPassword1">Group Name</label>
-                                                                <input type="text"  name="group_name" value="{{$permission->group_name}}" class="form-control  is-valid" placeholder="Group Name" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label for="exampleInputConfirmPassword1">Guard Name</label>
-                                                                <input type="text"  name="guard_name" value="{{$permission->guard_name}}" class="form-control  is-valid" placeholder="Guard Name" required readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-danger">Edit</button>
-                                                </div>
-                                            </form>
-                                        </div>
+
+                                            @endforeach
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
 
+                                <div class="tab-pane fade show active" id="practising" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                                    <div class="card-body">
 
-                                <!-- Delete Permission Model-->
-                                <div class="modal fade" id="delete{{$permission->id}}" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-sm" role="document">
-                                        <div class="modal-content">
-                                            <form class="forms-sample" method="POST" action="{{ url('user-management/permission/delete', $permission->id)}}">
-                                                {{ csrf_field() }}
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="demoModalLabel">Delete User Permission</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Are you sure you want to delete Permission: <strong> {{$permission->display_name}} </strong>?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-danger">Yes Delete</button>
-                                                </div>
-                                            </form>
-                                        </div>
                                     </div>
                                 </div>
 
+                                <div class="tab-pane fade" id="non_practising" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                    <div class="card-body">
 
-                            @endforeach
+                                    </div>
+                                </div>
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                <div class="tab-pane fade" id="suspended" role="tabpanel" aria-labelledby="pills-setting-tab">
+                                    <div class="card-body">
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="deferred" role="tabpanel" aria-labelledby="pills-setting-tab">
+                                    <div class="card-body">
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="non_profit" role="tabpanel" aria-labelledby="pills-setting-tab">
+                                    <div class="card-body">
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="retired" role="tabpanel" aria-labelledby="pills-setting-tab">
+                                    <div class="card-body">
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="deceased" role="tabpanel" aria-labelledby="pills-setting-tab">
+                                    <div class="card-body">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
             </div>
         </div>
 

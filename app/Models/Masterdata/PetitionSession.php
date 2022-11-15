@@ -2,7 +2,11 @@
 
 namespace App\Models\Masterdata;
 
-class PetitionSession
+use App\User;
+use Illuminate\Database\Eloquent\Model;
+
+class PetitionSession extends Model
 {
 
 }
+

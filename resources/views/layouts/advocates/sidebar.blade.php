@@ -36,9 +36,9 @@
                       <a class="dropdown" href="javascript:void(0)"><i class="ik ik-file-text"></i><span>Petition for Admission</span></a>
                       <div class="submenu-content">
                           <a @if(\Request::is('petition/personal-details')) class="menu-item active" @endif href="{{ url('petition/personal-details') }}" class="menu-item">Personal Details @if($profile) - <span style="color:DeepSkyBlue;">&#10003;</span>@endif</a>
-                          <a @if(\Request::is('petition/qualifications')) class="menu-item active" @endif href="{{ url('petition/qualifications') }}" class="menu-item">Education Qualications @if($qualification) - <span style="color:DeepSkyBlue;">&#10003;</span>@endif</a>
+                          <a @if(\Request::is('petition/qualifications')) class="menu-item active" @endif href="{{ url('petition/qualifications') }}" class="menu-item">Education Qualification @if($qualification) - <span style="color:DeepSkyBlue;">&#10003;</span>@endif</a>
                           <a @if(\Request::is('petition/attachments')) class="menu-item active" @endif href="{{ url('petition/attachments') }}" class="menu-item">Attachments @if($petition_form) @if($petition_form->attachment == 1) - <span style="color:DeepSkyBlue;">&#10003;</span>@endif @endif</a>
-                          <a @if(\Request::is('petition/llb')) class="menu-item active" @endif href="{{ url('petition/llb') }}" class="menu-item">LLB Colledge @if($llb) - <span style="color:DeepSkyBlue;">&#10003;</span>@endif</a>
+                          <a @if(\Request::is('petition/llb')) class="menu-item active" @endif href="{{ url('petition/llb') }}" class="menu-item">LLB College @if($llb) - <span style="color:DeepSkyBlue;">&#10003;</span>@endif</a>
                           @if($qualification)
                             @if($qualification->lst == "Yes")
                             <a @if(\Request::is('petition/lst')) class="menu-item active" @endif href="{{ url('petition/lst') }}" class="menu-item">Law School Details @if($lst) - <span style="color:DeepSkyBlue;">&#10003;</span>@endif</a>
@@ -51,40 +51,42 @@
                   </div>
                   @endif
 
-                  <div class="nav-item">
-                      <a href="{{ url('auth/advocate-profile') }}"><i class="ik ik-repeat"></i><span>Renewals</span></a>
+                  <div @if(\Request::is('renewal')) class = "nav-item active open" @endif class="nav-item">
+                      <a href="{{ url('renewal') }}"><i class="ik ik-repeat"></i><span>Renewals </span><span class="blink badge badge-success">Renew</span></a>
                   </div>
 
-                  <div class="nav-item">
-                      <a href="{{ url('auth/advocate-profile') }}"><i class="ik ik-paperclip"></i><span>Requests</span></a>
+                  <div @if(\Request::is('request')) class = "nav-item active open" @endif class="nav-item">
+                      <a href="{{ url('request') }}"><i class="ik ik-paperclip"></i><span>Requests</span></a>
                   </div>
 
-                  <div class="nav-item">
-                      <a href="{{ url('auth/advocate-profile') }}"><i class="ik ik-edit"></i><span>My Applications</span></a>
+                  <div @if(\Request::is('my-application')) class = "nav-item active open" @endif class="nav-item">
+                      <a href="{{ url('my-application') }}"><i class="ik ik-edit"></i><span>My Applications</span></a>
                   </div>
 
-                  <div class="nav-item">
-                      <a href="{{ url('auth/advocate-profile') }}"><i class="ik ik-award"></i><span>My Certificates</span></a>
+                  <div @if(\Request::is('my-certificate')) class = "nav-item active open" @endif class="nav-item">
+                      <a href="{{ url('my-certificate') }}"><i class="ik ik-award"></i><span>My Certificates</span></a>
                   </div>
 
-                  <div class="nav-item">
-                      <a href="{{ url('auth/advocate-profile') }}"><i class="ik ik-layers"></i><span>Firm & Work Place</span></a>
+                  <div @if(\Request::is('firm')) class = "nav-item active open" @endif class="nav-item">
+                      <a href="{{ url('firm') }}"><i class="ik ik-layers"></i><span>Firm & Work Place</span></a>
                   </div>
 
-                  <div @if(\Request::is('bills')) class="nav-item has-sub active open" @endif class="nav-item has-sub">
+                  <div @if(\Request::is('bill/pending-bill') ||
+                           \Request::is('bill/paid-bill')) class="nav-item has-sub active open" @endif class="nav-item has-sub">
                       <a class="dropdown" href="javascript:void(0)"><i class="ik ik-clipboard"></i><span>Bills & Payments</span></a>
                       <div class="submenu-content">
-                          <a href="widget-statistic.html" class="menu-item">Pending Bills</a>
-                          <a href="widget-data.html" class="menu-item">Paid Bills</a>
+                          <a @if(\Request::is('bill/pending-bill')) class="menu-item active" @endif href="{{ url('bill/pending-bill') }}" class="menu-item">Pending Bills</a>
+                          <a @if(\Request::is('bill/paid-bill')) class="menu-item active" @endif href="{{ url('bill/paid-bill') }}" class="menu-item">Paid Bills</a>
                       </div>
                   </div>
 
                   <div class="nav-lavel">Settings</div>
-                  <div class="nav-item has-sub">
-                      <a href="#"><i class="ik ik-box"></i><span>User Management</span></a>
+                  <div @if(\Request::is('user/change-password') ||
+                        \Request::is('user/update-profile')) class="nav-item active open has-sub" @endif class="nav-item has-sub">
+                      <a href="#"><i class="ik ik-user"></i><span>User Management</span></a>
                       <div class="submenu-content">
-                          <a href="ui/alerts.html" class="menu-item">Change Password</a>
-                          <a href="ui/alerts.html" class="menu-item">Profile Update</a>
+                          <a @if(\Request::is('user/change-password')) class="menu-item active"  @endif href="{{ url('user/change-password') }}" class="menu-item">Change Password</a>
+                          <a @if(\Request::is('user/update-profile')) class="menu-item active"  @endif href="{{ url('user/update-profile') }}" class="menu-item">Profile Update</a>
                       </div>
                   </div>
 

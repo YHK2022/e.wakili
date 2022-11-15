@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Administrations;
+namespace App\Models\Masterdata;
 
 use App\Models\Courts\Court;
 use App\User;

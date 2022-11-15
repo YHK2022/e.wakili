@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Advocate\Advocate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Validator,Redirect,Response;
@@ -118,6 +119,7 @@ class AuthController extends Controller
     public function get_dashboard()
     {
       if(Auth::check()){
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $qualification = Qualification::where('user_id', $user_id)->first();
@@ -127,6 +129,38 @@ class AuthController extends Controller
         $experience = WorkExperience::where('user_id', $user_id)->first();
         $progress = ApplicationMove::where('user_id', $user_id)->first();
         $petition_form = PetitionForm::where('user_id', $user_id)->first();
+
+        //Count advocates
+
+          $practising = "PRACTISING";
+          $non_practising = "NON_PRACTISING";
+          $suspended = "SUSPENDED";
+          $retired = "RETIRED";
+          $deceased = "DECEASED";
+          $deferred = "DEFERRED";
+          $non_profit = "NON_PROFIT";
+          $struck_out = "STRUCK_OUT";
+
+          $practising_count = Advocate::where('status','=',$practising)->count();
+          $non_practising_count = Advocate::where('status','=',$non_practising)->count();
+          $suspended_count = Advocate::where('status','=',$suspended)->count();
+          $non_profit_count = Advocate::where('status','=',$non_profit)->count();
+          $retired_count = Advocate::where('status','=',$retired)->count();
+          $deferred_count = Advocate::where('status','=',$deferred)->count();
+          $deceased_count = Advocate::where('status','=',$deceased)->count();
+          $struck_out_count = Advocate::where('status','=',$struck_out)->count();
+          $all_count = Advocate::all()->count();
+
+          $practising_percent = round($practising_count/$all_count*100,2);
+          $non_practising_percent = round($non_practising_count/$all_count*100,2);
+          $suspended_percent = round($suspended_count/$all_count*100,2);
+          $non_profit_percent = round($non_profit_count/$all_count*100,2);
+          $retired_percent = round($retired_count/$all_count*100,2);
+          $deferred_percent = round($deferred_count/$all_count*100,2);
+          $deceased_percent = round($deceased_count/$all_count*100,2);
+          $struck_out_percent = round($struck_out_count/$all_count*100,2);
+          $all_percent = $all_count/$all_count*100;
+
         //dd($progress);exit;
         return view('management.dashboard', [
           'profile' => $profile,
@@ -137,6 +171,26 @@ class AuthController extends Controller
           'lst' => $lst,
           'attachment' => $attachment,
           'petition_form' => $petition_form,
+          //count
+          'practising_count' => $practising_count,
+          'non_practising_count' => $non_practising_count,
+          'suspended_count' => $suspended_count,
+          'non_profit_count' => $non_profit_count,
+          'retired_count' => $retired_count,
+          'deferred_count' => $deferred_count,
+          'deceased_count' => $deceased_count,
+          'struck_out_count' => $struck_out_count,
+          'all_count' => $all_count,
+          // percent
+          'practising_percent' => $practising_percent,
+          'non_practising_percent' => $non_practising_percent,
+          'suspended_percent' => $suspended_percent,
+          'non_profit_percent' => $non_profit_percent,
+          'retired_percent' => $retired_percent,
+          'deferred_percent' => $deferred_percent,
+          'deceased_percent' => $deceased_percent,
+          'struck_out_percent' => $struck_out_percent,
+          'all_percent' => $all_percent,
         ]);
       }
       return Redirect::to("auth/login")->withErrors('You do not have access!');

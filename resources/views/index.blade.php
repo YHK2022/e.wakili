@@ -28,15 +28,17 @@
 					</div>
 					<div class="mw800 m-auto justify-content-center">
 						<div class="row justify-content-center">
+                            @if($session->close_date >= $current_date)
 							<div class="col-md-4 justify-content-center">
 								<div class="cours-search-bx m-b30">
 									<span class="cours-search-text">New Petition for Admission!</span>
-									<span class="cours-search-text">Clossing on 20/10/2021</span>
+									<span class="cours-search-text">Clossing on {{$session->close_date}}</span>
 									<div class="justify-content-center">
 										<a href="{{ url('advocate-registration') }}" class="btn">Apply Now</a>
 									</div>
 								</div>
 							</div>
+                            @endif
 						</div>
 					</div>
 				</div>

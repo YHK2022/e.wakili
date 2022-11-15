@@ -19,8 +19,8 @@
                       <a href="{{ url('auth/dashboard') }}"><i class="ik ik-bar-chart-2"></i><span>Dashboard</span></a>
                   </div>
 
-                  <div @if(\Request::is('advocate-roll')) class="nav-item active" @endif class="nav-item">
-                      <a href="{{ url('advocate-roll') }}"><i class="ik ik-users"></i><span>Roll of Advocates</span></a>
+                  <div @if(\Request::is('advocate/roll')) class="nav-item active" @endif class="nav-item">
+                      <a href="{{ url('advocate/roll') }}"><i class="ik ik-users"></i><span>Roll of Advocates</span></a>
                   </div>
 
                   <div class="nav-lavel">Petition for Admission</div>
@@ -280,6 +280,8 @@
                   <div @if(\Request::is('settings/advocate-category') ||
                         \Request::is('settings/request-type') ||
                         \Request::is('settings/region') ||
+                        \Request::is('settings/petition-session')||
+                        \Request::is('settings/venue')||
                         \Request::is('settings/district')
                         )
                         class="nav-item has-sub active open" @endif class="nav-item has-sub">
@@ -289,6 +291,8 @@
                           <a @if(\Request::is('settings/request-type')) class="menu-item active" @endif href="{{ url('settings/request-type') }}" class="menu-item">Request Types </a>
                           <a @if(\Request::is('settings/region')) class="menu-item active" @endif href="{{ url('settings/region') }}" class="menu-item">Region </a>
                           <a @if(\Request::is('settings/district')) class="menu-item active" @endif href="{{ url('settings/district') }}" class="menu-item">District </a>
+                          <a @if(\Request::is('settings/petition-session')) class="menu-item active" @endif href="{{ url('settings/petition-session') }}" class="menu-item">Petition Sessions </a>
+                          <a @if(\Request::is('settings/venue')) class="menu-item active" @endif href="{{ url('settings/venue') }}" class="menu-item">Appearance Venue </a>
                       </div>
                   </div>
 

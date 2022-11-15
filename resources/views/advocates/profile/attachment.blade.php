@@ -35,7 +35,7 @@
         <!-- Start Alert-->
             @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }} 
+                {{ session('success') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <i class="ik ik-x"></i>
                 </button>
@@ -43,13 +43,13 @@
             @endif
             @if (session('warning'))
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{ session('warning') }} 
+                {{ session('warning') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <i class="ik ik-x"></i>
                 </button>
             </div>
             @endif
-            @if($errors->any()) 
+            @if($errors->any())
                 @foreach($errors->all() as $error)
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     {{ $error }}
@@ -59,9 +59,9 @@
                     </div>
                 @endforeach
             @endif
-            
+
         <!-- End Alert-->
-        
+
         <div class="row">
         <div class="col-md-12">
             <div class="accordion" id="accordionExample">
@@ -69,13 +69,13 @@
                 <div class="card-header" id="headingOne">
                 <h2 class="mb-0">
                     <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <h3>Required Attachements 
+                    <h3>Required Attachements
                             @if($qualification)
                             @if($qualification->lst == 'Yes')<i>[ Law School ]</i>
                             @else <i>[ Bar ]</i>
                             @endif
-                            @endif 
-                            @if($petition_form) 
+                            @endif
+                            @if($petition_form)
                             @if($petition_form->attachment == 1) - <span style="color:green;">&#10003;</span> @endif
                             @endif
                     </h3>
@@ -105,7 +105,7 @@
                                                     <button type="submit" class="btn btn-danger button1"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -114,11 +114,11 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
-                        
+
                         @else
                         <div class="row">
                                 <div class="col-sm-9">
@@ -134,7 +134,7 @@
                                                 <div class="col-sm-3">
                                                     <button type="submit" class="btn btn-info"><i class="ik ik-share"></i>Upload</button>
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -162,7 +162,7 @@
                                                 <div class="col-sm-9">
                                                     <a href="#petition{{$attach_move->id}}"  title="{{ $attach_move->petition }}" data-toggle="modal" data-id="{{ $attach_move->id }}" data-name="{{ $attach_move->petition }}" data-file="{{ $attach_move->petition }}" data-target="#petition{{$attach_move->id}}">
                                                     <span>
-                                                        
+
                                                         <p><i style="color:red" class="fas fa-file-pdf fa-lg"></i> - Petition for Admission and Enrollment  @if($petition_form->attachment == 1) - <span style="color:DeepSkyBlue;">&#10003;</span> @endif</p>
                                                     </span>
                                                     </a>
@@ -172,7 +172,7 @@
                                                     <button type="submit" class="btn btn-danger button2"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -199,7 +199,7 @@
                                     </div>
                                 </div>
                         </div>
-                        
+
                         @else
                         <div class="row">
                                 <div class="col-sm-9">
@@ -207,7 +207,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                 <h4 class="sub-title">Petition for Admission and Enrollment</h4>
@@ -228,7 +228,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -255,7 +255,7 @@
                                                     <button type="submit" class="btn btn-danger button3"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -282,7 +282,7 @@
                                     </div>
                                 </div>
                         </div>
-                        
+
                         @else
                         <div class="row" id="birthcert">
                                 <div class="col-sm-9">
@@ -290,7 +290,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                 <h4 class="sub-title">Birth Certificate</h4>
@@ -311,7 +311,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -339,7 +339,7 @@
                                                     <button type="submit" class="btn btn-danger button4"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -366,7 +366,7 @@
                                     </div>
                                 </div>
                         </div>
-                        
+
                         @else
                         <div class="row" id="charcert">
                                 <div class="col-sm-9">
@@ -374,7 +374,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                 <h4 class="sub-title">Certificate of Good Character From Experienced Lawyer </h4>
@@ -395,7 +395,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -422,7 +422,7 @@
                                                     <button type="submit" class="btn btn-danger button5"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -431,7 +431,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -442,7 +442,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Employer Letter<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -458,18 +458,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>  
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
                         @endif
-                        
-                        
+
+
                         @if($qualification)
                         @if($qualification->o_level == 'Tanzania')
                         <!-- O-Level Certificate TZ-->
@@ -493,7 +493,7 @@
                                                     <button type="submit" class="btn btn-danger button6"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -502,7 +502,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -513,7 +513,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Certificate of Secondary Education (CSEE) <small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -529,12 +529,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>    
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -562,7 +562,7 @@
                                                     <button type="submit" class="btn btn-danger button7"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -571,7 +571,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -582,7 +582,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Certificate of Ordinary Secondary Education <small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -598,12 +598,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>    
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -628,7 +628,7 @@
                                                     <button type="submit" class="btn btn-danger button8"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -637,7 +637,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -648,7 +648,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">NECTA Certificate of Recognition <small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -669,7 +669,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -700,7 +700,7 @@
                                                     <button type="submit" class="btn btn-danger button9"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -709,7 +709,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -720,7 +720,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Advanced Certificate of Secondary Education (ACSEE)<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -736,12 +736,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>    
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -768,7 +768,7 @@
                                                     <button type="submit" class="btn btn-danger button10"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -777,7 +777,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -788,7 +788,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Advanced Certificate of Secondary Education<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -804,12 +804,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>    
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -835,7 +835,7 @@
                                                     <button type="submit" class="btn btn-danger button11"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -844,7 +844,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -855,7 +855,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">NECTA/NACTE Certificate of Recognition<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -871,12 +871,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>    
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -907,7 +907,7 @@
                                                     <button type="submit" class="btn btn-danger button12"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -916,7 +916,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -927,7 +927,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">LLB Certificate<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -943,12 +943,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>   
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -974,7 +974,7 @@
                                                     <button type="submit" class="btn btn-danger button13"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -983,7 +983,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -994,7 +994,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">LLB Transcript<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1010,12 +1010,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>    
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1043,7 +1043,7 @@
                                                     <button type="submit" class="btn btn-danger button14"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -1052,7 +1052,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1063,7 +1063,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">LLB Certificate<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1079,12 +1079,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>   
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1110,7 +1110,7 @@
                                                     <button type="submit" class="btn btn-danger button15"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -1119,7 +1119,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1130,7 +1130,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">LLB Transcript<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1146,12 +1146,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>   
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1177,7 +1177,7 @@
                                                     <button type="submit" class="btn btn-danger button16"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -1186,7 +1186,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1197,7 +1197,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">TCU Certificate of Recognition<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1213,12 +1213,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>  
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1249,7 +1249,7 @@
                                                     <button type="submit" class="btn btn-danger button17"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -1258,7 +1258,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1269,7 +1269,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Post Graduate Diploma in Legal Practice from LST<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1285,12 +1285,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form> 
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1316,7 +1316,7 @@
                                                     <button type="submit" class="btn btn-danger button18"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -1325,7 +1325,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1336,7 +1336,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Final Result Post Graduate Diploma in Legal Practice from LST<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1352,12 +1352,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form> 
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1385,7 +1385,7 @@
                                                     <button type="submit" class="btn btn-danger button19"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -1394,7 +1394,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1405,7 +1405,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Letter for Pupilage<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1421,12 +1421,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>    
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1452,7 +1452,7 @@
                                                     <button type="submit" class="btn btn-danger button20"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -1461,7 +1461,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1472,7 +1472,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Intenship / Extenship<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1488,12 +1488,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>    
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1524,7 +1524,7 @@
                                                     <button type="submit" class="btn btn-danger button21"><i class="ik ik-trash-2"></i>Remove</button>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -1533,7 +1533,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1544,7 +1544,7 @@
                                 {{ csrf_field() }}
                                     <div class="form-group">
                                         <div class="col-sm-12 col-md-12 col-xl-12 mb-30">
-                                            
+
                                             <div class="form-group row">
                                                <div class="col-sm-12 col-md-12 col-xl-12" style="margin-top:0px;">
                                                <h4 class="sub-title">Deed Poll<small><i style="color:red;">Certified copy .pdf format</i></small></h4>
@@ -1560,12 +1560,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>   
+                                </form>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                       
+
                                     </div>
                                 </div>
                         </div>
@@ -1577,12 +1577,12 @@
                         @if($petition_form->attachment == 0)
                         <form class="submit" method="POST" action="{{ url('petition/post-attachments')}}">
                         {{ csrf_field() }}
-                            <button type="submit" class="btn btn-danger mr-2">Save All</button>
+                            <button type="submit" class="btn btn-danger mr-2">Submit All</button>
                         </form>
                         @endif
                         @endif
                     </div>
-                    
+
                   </div>
                 </div>
                 </div>

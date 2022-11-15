@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Locations;
 
 use App\Http\Controllers\Controller;
-use App\Models\Locations\Region;
+use App\Models\Masterdata\Region;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 

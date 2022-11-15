@@ -35,7 +35,7 @@
         <!-- Start Alert-->
             @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }} 
+                {{ session('success') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <i class="ik ik-x"></i>
                 </button>
@@ -43,13 +43,13 @@
             @endif
             @if (session('warning'))
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{ session('warning') }} 
+                {{ session('warning') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <i class="ik ik-x"></i>
                 </button>
             </div>
             @endif
-            @if($errors->any()) 
+            @if($errors->any())
                 @foreach($errors->all() as $error)
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     {{ $error }}
@@ -59,9 +59,9 @@
                     </div>
                 @endforeach
             @endif
-            
+
         <!-- End Alert-->
-        
+
         <div class="row">
         <div class="col-md-12">
             <div class="accordion" id="accordionExample">
@@ -83,17 +83,59 @@
                         <form class="forms-sample" method="POST" action="{{ url('petition/update-profile')}}">
                         {{ csrf_field() }}
                             <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputUsername1">Title</label>
+                                        <select name="title" class="form-control is-valid" id="exampleSelectTile" required>
+                                            <option value="{{$profile->title}}">{{$profile->title}}</option>
+                                            <option value="Male">Mr</option>
+                                            <option value="Female">Mrs</option>
+                                            <option value="Male">Miss</option>
+                                            <option value="Female">Dr</option>
+                                            <option value="Male">Prof</option>
+                                            <option value="Female">Fr</option>
+                                            <option value="Male">Imaam</option>
+                                            <option value="Female">Muft</option>
+                                            <option value="Male">Pr</option>
+                                            <option value="Female">Rev</option>
+                                            <option value="Male">Sr</option>
+                                            <option value="Female">Sheikh</option>
+                                            <option value="Male">Gen</option>
+                                            <option value="Female">Lt Gen</option>
+                                            <option value="Male">Maj Gen</option>
+                                            <option value="Female">Brig Gen</option>
+                                            <option value="Male">Col</option>
+                                            <option value="Female">Lt Col</option>
+                                            <option value="Male">Maj</option>
+                                            <option value="Female">Capt</option>
+                                            <option value="Female">Lt</option>
+                                            <option value="Male">IGP</option>
+                                            <option value="Female">CP</option>
+                                            <option value="Male">DCP</option>
+                                            <option value="Female">SACP</option>
+                                            <option value="Male">ACP</option>
+                                            <option value="Female">SSP</option>
+                                            <option value="Male">SP</option>
+                                            <option value="Female">ASP</option>
+                                            <option value="Male">Insp</option>
+                                            <option value="Female">A/Insp</option>
+                                            <option value="Male">Sgt</option>
+                                            <option value="Female">Cpl</option>
+                                            <option value="Female">Pc</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                     <label for="exampleInputUsername1">Full Name</label>
                                     <input type="text" name="name" class="form-control is-valid" value="{{ Auth::user()->username }}" id="exampleInputUsername1" placeholder="Username">
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="exampleSelectGender">Gender</label>
                                         <select name="gender" class="form-control is-valid" id="exampleSelectGender" required>
-                                            <option value="{{$profile->gender}}">{{$profile->gender}}</option>    
+                                            <option value="{{$profile->gender}}">{{$profile->gender}}</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
                                         </select>
@@ -119,7 +161,7 @@
                                     <div class="form-group">
                                     <label for="exampleSelectGender">ID Type</label>
                                     <select name="id_type" class="form-control is-valid" id="exampleSelectGender" required>
-                                        <option value="{{$profile->id_type}}">{{$profile->id_type}}</option>    
+                                        <option value="{{$profile->id_type}}">{{$profile->id_type}}</option>
                                         <option value="National Identity Card">National Identity Card</option>
                                         <option value="Voters Identity Card">Voters Identity Card</option>
                                         <option value="Passport">Passport</option>
@@ -134,25 +176,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                    <label for="exampleInputEmail1">Email</label>
-                                    <input type="email" name="email" class="form-control is-valid" value="{{ Auth::user()->email }}" id="exampleInputEmail1" placeholder="Email">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                    <label for="exampleInputUsername1">Mobile</label>
-                                    <input type="text" name="mobile" class="form-control is-valid" value="{{ Auth::user()->mobile }}" id="exampleInputUsername1" placeholder="Mobile Number">
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-danger mr-2">Save Changes</button>
+                            <button type="submit" class="btn btn-danger mr-2">Update Changes</button>
                             <button class="btn btn-default">Cancel</button>
+                            <a href="{{ url('petition/qualifications') }}" class="btn btn-primary">Next</a>
                         </form>
                     </div>
-                    
+
                   </div>
                 </div>
                 </div>
@@ -176,17 +205,59 @@
                         <form class="forms-sample" method="POST" action="{{ url('petition/post-profile')}}">
                         {{ csrf_field() }}
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <div class="form-group">
-                                    <label for="exampleInputUsername1">Full Name</label>
-                                    <input type="text" name="name" class="form-control is-valid" value="{{ Auth::user()->username }}" id="exampleInputUsername1" placeholder="Username">
+                                    <label for="exampleInputUsername1">Title</label>
+                                        <select name="title" class="form-control is-valid" id="exampleSelectTile" required>
+                                            <option value="">--Choose one--</option>
+                                            <option value="Male">Mr</option>
+                                            <option value="Female">Mrs</option>
+                                            <option value="Male">Miss</option>
+                                            <option value="Female">Dr</option>
+                                            <option value="Male">Prof</option>
+                                            <option value="Female">Fr</option>
+                                            <option value="Male">Imaam</option>
+                                            <option value="Female">Muft</option>
+                                            <option value="Male">Pr</option>
+                                            <option value="Female">Rev</option>
+                                            <option value="Male">Sr</option>
+                                            <option value="Female">Sheikh</option>
+                                            <option value="Male">Gen</option>
+                                            <option value="Female">Lt Gen</option>
+                                            <option value="Male">Maj Gen</option>
+                                            <option value="Female">Brig Gen</option>
+                                            <option value="Male">Col</option>
+                                            <option value="Female">Lt Col</option>
+                                            <option value="Male">Maj</option>
+                                            <option value="Female">Capt</option>
+                                            <option value="Female">Lt</option>
+                                            <option value="Male">IGP</option>
+                                            <option value="Female">CP</option>
+                                            <option value="Male">DCP</option>
+                                            <option value="Female">SACP</option>
+                                            <option value="Male">ACP</option>
+                                            <option value="Female">SSP</option>
+                                            <option value="Male">SP</option>
+                                            <option value="Female">ASP</option>
+                                            <option value="Male">Insp</option>
+                                            <option value="Female">A/Insp</option>
+                                            <option value="Male">Sgt</option>
+                                            <option value="Female">Cpl</option>
+                                            <option value="Female">Pc</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
+                                        <label for="exampleInputUsername1">Full Name</label>
+                                        <input type="text" name="name" class="form-control is-valid" value="{{ Auth::user()->username }}" id="exampleInputUsername1" placeholder="Username">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
                                         <label for="exampleSelectGender">Gender</label>
                                         <select name="gender" class="form-control is-valid" id="exampleSelectGender" required>
-                                            <option value="">--Choose one--</option>    
+                                            <option value="">--Choose one--</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
                                         </select>
@@ -212,7 +283,7 @@
                                     <div class="form-group">
                                     <label for="exampleSelectGender">ID Type</label>
                                     <select name="id_type" class="form-control is-valid" id="exampleSelectGender" required>
-                                        <option value="">--Choose one--</option>    
+                                        <option value="">--Choose one--</option>
                                         <option value="National Identity Card">National Identity Card</option>
                                         <option value="Voters Identity Card">Voters Identity Card</option>
                                         <option value="Passport">Passport</option>
@@ -227,25 +298,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                    <label for="exampleInputEmail1">Email</label>
-                                    <input type="email" name="email" class="form-control is-valid" value="{{ Auth::user()->email }}" id="exampleInputEmail1" placeholder="Email">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                    <label for="exampleInputUsername1">Mobile</label>
-                                    <input type="text" name="mobile" class="form-control is-valid" value="{{ Auth::user()->mobile }}" id="exampleInputUsername1" placeholder="Mobile Number">
-                                    </div>
-                                </div>
-                            </div>
                             <button type="submit" class="btn btn-danger mr-2">Save</button>
                             <button class="btn btn-default">Cancel</button>
                         </form>
                     </div>
-                    
+
                   </div>
                 </div>
                 </div>

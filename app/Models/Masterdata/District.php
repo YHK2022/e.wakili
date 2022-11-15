@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Models\Locations;
+namespace App\Models\Masterdata;
 
-use App\Models\Administrations\Firm;
 use App\Models\Admissions\Admission;
 use App\Models\Cases\Criminals\Criminal;
 use App\Models\Courts\Court;

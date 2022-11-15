@@ -16,7 +16,7 @@
 
     <link href="{{ asset('css2/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('css2/style.css') }}" rel="stylesheet">
-    
+
     <style>
         body{
             margin: 0;
@@ -60,7 +60,7 @@
             right: 0;
             top: calc(-70px/2);
         }
-        
+
         .contact-form a
         {
             color: #fff;
@@ -68,18 +68,18 @@
             font-weight: bold;
             text-decoration: none;
         }
-        
-        
+
+
     </style>
 </head>
 
 <body class="gray-bg">
-    
+
     <div class="contact-form fadeInDown">
-        
+
             <div>
                 <center>
-                    @if($errors->any()) 
+                    @if($errors->any())
                         <div class="alert alert-danger alert-dismissable">
                             @foreach($errors->all() as $error)
                                 <a href="#" class="alert-link">INFO! :</a> {{ $error }}
@@ -127,7 +127,7 @@
                     <input id="mobile" type="text" class="form-control" name="mobile"
                     data-mask="999 999 9999"  placeholder="Mobile Number" required />
                 </div>
-                
+
                 <div class="form-group">
                     {!! Form::select('qualification', $advQualification, null, ['class'=>'firm-select form-control',
                     'id'=>'qualification', 'placeholder'=>'Select Qualification', 'required']) !!}
@@ -165,7 +165,7 @@
                     <input id="password-confirm" type="password" class="form-control"
                            name="password_confirmation" placeholder="Confirm Password" required />
                 </div>
-                
+
             </div>
             </div>
             <div class="row">
@@ -189,21 +189,21 @@
                 <button type="submit" class="btn btn-sm btn-block btn-primary"><i class="fa fa-sign-in"></i> Request Registration</button>
                 </div>
             </div>
-                
+
             </form>
         <center><p class="m-t" style="color:black;"> <small><span>Copyright &copy; <?php echo date('Y'); ?>. Judiciary of Tanzania.</span><br><span> JSDS version 2.1</span></small></p></center>
     </div>
 
-    
 
-    
-<script src="{{ asset('assets/js/plugins/iCheck/icheck.min.js') }}"></script>   
+
+
+<script src="{{ asset('assets/js/plugins/iCheck/icheck.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
 
 <script>
         $(document).ready(function() {
-          
+
             setTimeout(function() {
                 toastr.options = {
                     closeButton: true,
@@ -214,8 +214,8 @@
                 toastr.success('A Case Management System', 'Welcome to JSDS 2');
 
             }, 1300);
-            
-         
+
+
            $('#compensation').on('ifChecked', function () {
                 $('#caseFine').slideUp();
                 $('#caseImprisonment').slideUp();
@@ -245,7 +245,7 @@
                 $('#caseImprisonment :input').attr('disabled', false);
                 $("#caseImprisonment").slideDown();
             });
-            
+
             $('#birthDate').datepicker({
                 todayBtn: "linked",
                 keyboardNavigation: false,
@@ -271,28 +271,28 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
-            
-           
-            
+
+
+
             $('.firmId').select2({
                 placeholder: 'Select Office',
                 width: '100%'
-                
+
             });
 
             $('.firmId2').select2({
-                placeholder: 'Select Advocate Firm',
+                placeholder: 'Select AdvocateCategory Firm',
                 width: '100%'
-                
+
             });
-            
+
             $('.countryId').select2({
                 placeholder: 'Select Country',
                 width: '100%'
             });
-           
-             
-            
+
+
+
             $("#selectbox").on("change", function() {
               var sOptionVal = $(this).val();
               if (/modal/i.test(sOptionVal)) {
@@ -300,7 +300,7 @@
                 $selectedOption.modal('show');
               }
             });
-            
+
         var uploadField = document.getElementById("file");
 
           uploadField.onchange = function() {
@@ -309,7 +309,7 @@
            this.value = "";
             };
         };
-            
+
         });
     </script>
 </body>

@@ -20,6 +20,7 @@ use App\Profile;
 use App\User;
 use App\Mail\VerifyFirm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -136,17 +137,19 @@ class PetitionController extends Controller
         if(Auth::check()){
 
         $this->validate($request, [
+            'title' => 'required',
             'name' => 'required',
             'gender' => 'required',
             'dob' => 'required',
             'nationality' => 'required',
             'id_type' => 'required',
             'id_number' => 'required',
-            'email' => 'required',
-            'mobile' => 'required',
         ]);
 
+        $uuid = Str::uuid();
+
         $profile = new Profile();
+        $profile->title = $request->input('title');
         $profile->fullname = $request->input('name');
         $profile->gender = $request->input('gender');
         $profile->dob = $request->input('dob');
@@ -154,6 +157,9 @@ class PetitionController extends Controller
         $profile->id_type = $request->input('id_type');
         $profile->id_number = $request->input('id_number');
         $profile->user_id = Auth::user()->id;
+        $profile->uid = $uuid;
+        $profile->active = "true";
+        //dd($profile);exit;
         $profile->save();
 
         //Insert petition forms values
@@ -162,12 +168,14 @@ class PetitionController extends Controller
         $form = new PetitionForm();
         $form->personal_detail = $petition_form_one;
         $form->user_id = Auth::user()->id;
+        $form->profile_id = $profile->id;
         $form->save();
 
         $progress_value = 15;
         $progress = new ApplicationMove();
         $progress->appl_progress = $progress_value;
         $progress->user_id = Auth::user()->id;
+        $progress->profile_id = $profile->id;
         $progress->save();
 
         }
@@ -184,13 +192,15 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_qualification(Request $request)
-    { 
+    {
         if(Auth::check()){
         $user_id = Auth::user()->id;
+        $profile_id = Profile::where('user_id', $user_id)->first()->id;
         $progress = ApplicationMove::where('user_id', $user_id)->first(['appl_progress'])->appl_progress;
         $progress_form = 20;
         $new_progress = $progress + $progress_form;
-        
+
+
         $this->validate($request, [
             'olevel' => 'required',
             'alevel' => 'required',
@@ -206,9 +216,11 @@ class PetitionController extends Controller
         $qualification->lst = $request->input('lst');
         $qualification->names_validation = $request->input('validation');
         $qualification->user_id = Auth::user()->id;
+        $qualification->profile_id = $profile_id;
+        //dd($qualification);exit;
         $qualification->save();
 
-        
+
         if($qualification){
          //Update petition forms values
         $qualification_form_value = 1;
@@ -219,26 +231,36 @@ class PetitionController extends Controller
         $progress = DB::table('application_moves')
                         ->where('user_id', $user_id)
                         ->update(['appl_progress' => $new_progress]);
-        
+
         //Save application information values
         $submitdate = date('Y-m-d H:i:s');
-        $appl_type = "Petition";
+        $uuid = Str::uuid();
+        $appl_type = "PETITION";
         $lst = $request->input('lst');
         if($lst == "Yes"){
-            $qualification = "Law School";
+            $qualification = "LAW SCHOOL";
         }
 
         if($lst == "No"){
-            $qualification = "Bar";
+            $qualification = "BAR";
         }
-        $status = "Not Comleted";
+        $status = "NOT SUBMITTED";
 
         $application = new Application();
-        $application->submit_date = $submitdate;
-        $application->application_type = $appl_type;
+        $application->submission_at = $submitdate;
+        $application->active = "true";
+        $application->uid = $uuid;
+        $application->type = $appl_type;
         $application->qualification = $qualification;
         $application->status = $status;
-        $application->user_id = Auth::user()->id;
+        $application->resubmission = "true";
+        $application->un_reviewed = "0";
+        $application->current_stage = "1";
+        $application->profile_id = $profile_id;
+        $application->workflow_process_id = "1";
+        $application->actionstatus = "0";
+        $application->stage = "0";
+        //dd($application);exit;
         $application->save();
 
         }
@@ -255,15 +277,19 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_profile_picture(Request $request)
-    { 
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
+        $application_id = Application::where('profile_id', $profile_id)->first()->id;
         $name = "Profile Picuture";
         $status = 0;
         $ldate = date('Y-m-d H:i:s');
+        $uuid = Str::uuid();
+
+        //echo $application_id;exit;
 
          $this->validate($request, [
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -278,9 +304,12 @@ class PetitionController extends Controller
 
             $document = new Document;
             $document->user_id = $user_id;
+            $document->uid = $uuid;
+            $document->application_id = $application_id;
+            $document->profile_id = $profile_id;
             $document->name = $name;
             $document->file = $fileNameToStore;
-            $document->author = $profile_id;
+            $document->auther = $profile_id;
             $document->upload_date = $ldate;
             $document->status = $status;
             //dd($document);exit;
@@ -289,6 +318,8 @@ class PetitionController extends Controller
             if($document->save()){
                 $attachment = new AttachmentMove;
                 $attachment->user_id = $user_id;
+                $attachment->profile_id = $profile_id;
+                $attachment->application_id = $application_id;
                 $attachment->profile_picture = $fileNameToStore;
                 //dd($document);exit;
                 $attachment->save();
@@ -312,9 +343,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_petition_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -363,9 +394,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_csee_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -415,9 +446,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_necta_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -467,9 +498,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_acsee_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -519,9 +550,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_nacte_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -571,9 +602,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_llbcert_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -623,9 +654,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_llbtrans_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -675,9 +706,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_tcu_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -727,9 +758,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_lstcert_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -779,9 +810,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_lsttrans_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -831,9 +862,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_pupilage_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -883,9 +914,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_intenship_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -935,9 +966,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_empletter_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -987,9 +1018,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_deedpoll_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -1039,9 +1070,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_birthcert_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -1091,9 +1122,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_charcert_document(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -1142,9 +1173,9 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function submit_attachments(Request $request)
-    {  
+    {
         if(Auth::check()){
-         
+
         $user_id = Auth::user()->id;
         $profile = Profile::where('user_id', $user_id)->first();
         $profile_id = Profile::where('user_id', $user_id)->first(['id'])->id;
@@ -1384,7 +1415,7 @@ class PetitionController extends Controller
                     'experience' => $experience,
                 ]);
             }
-           
+
           }
           return Redirect::to("auth/login")->withErrors('You do not have access!');
     }
@@ -1483,7 +1514,7 @@ class PetitionController extends Controller
         $progress = ApplicationMove::where('user_id', $user_id)->first(['appl_progress'])->appl_progress;
         $progress_form = 10;
         $value = 1;
-        
+
         $new_progress = $progress + $progress_form;
         $progress = DB::table('application_moves')
                         ->where('user_id', $user_id)
@@ -1617,7 +1648,7 @@ class PetitionController extends Controller
             $progress = DB::table('application_moves')
                             ->where('user_id', $user_id)
                             ->update(['appl_progress' => $new_progress]);
-            
+
             //Update petition form
             $profile_picture = DB::table('petition_forms')
                             ->where('user_id', $user_id)
@@ -1697,12 +1728,12 @@ class PetitionController extends Controller
             $progress = ApplicationMove::where('user_id', $user_id)->first(['appl_progress'])->appl_progress;
             $progress_form = 10;
             $value = 1;
-            
+
             $new_progress = $progress + $progress_form;
             $progress = DB::table('application_moves')
                             ->where('user_id', $user_id)
                             ->update(['appl_progress' => $new_progress]);
-    
+
              //Update petition form
              $profile_picture = DB::table('petition_forms')
                             ->where('user_id', $user_id)
@@ -1715,43 +1746,43 @@ class PetitionController extends Controller
         return Redirect::to("auth/login")->withErrors('You do not have access!');
     }
 
-    
+
     /**
-     * Law firms live search 
+     * Law firms live search
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response
      */
     public function search_firm(Request $request)
     {
         $search_val = $request->id;
-        
+
         if (is_null($search_val))
         {
         return view('advocates.profile.firm');
         }
         else
         {
-        
+
         $posts_data = Firm::where('name','LIKE',"%{$search_val}%")->get();
-        
+
         $output = '';
-           
+
         if (count($posts_data)>0) {
-          
+
             $output = '<ul class="list-group" style="display: block; position: relative;">';
-          
+
             foreach ($posts_data as $row){
                 $register = url('petition/request-firm',$row->id);
                 $output .= '<li class="list-group-item">'.'<table>'.'<tr>'.'<td style="width:90%;font-size:15px;">'.$row->name.'</td>'.'<td style="width:10%">'.'<a class="btn btn-danger btn-xs" style="" href="'.$register.'">'.'Register'.'</a>'.'</td>'.'</tr>'.'</table>'.'</li>';
             }
-          
+
             $output .= '</ul>';
         }
         else {
             $add = url('petition/add-firm');
             $output .= '<li class="list-group-item">'.'<table>'.'<tr>'.'<td style="width:90%;font-size:15px;">'.'No firm results found !'.'</td>'.'<td style="width:10%">'.'<a class="btn btn-danger btn-xs" style="" href="'.$add.'">'.'Add new firm'.'</a>'.'</td>'.'</tr>'.'</table>'.'</li>';
         }
-       
+
         return $output;
 
       }
@@ -1764,7 +1795,7 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function add_firm_request(Request $request, $id)
-    {   
+    {
         if(Auth::check()){
 
         $user_id = Auth::user()->id;
@@ -1810,14 +1841,14 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function post_firm_confirmation(Request $request)
-    {   
+    {
         if(Auth::check()){
 
         $user_id = Auth::user()->id;
 
         $ver_code = $request->input('code');
 
-        //Find and compare the verificaion code 
+        //Find and compare the verificaion code
         $verf_code = FirmRequestConfirmation::where('requester_id', $user_id)->first('ver_code')->ver_code;
         $firm_id = FirmRequestConfirmation::where('requester_id', $user_id)->first('firm_id')->firm_id;
 
@@ -1874,7 +1905,7 @@ class PetitionController extends Controller
                 return back()->withErrors('You cant complete this step until you submit at least your personal information!');
             }
 
-            
+
         }
 
         }
@@ -1888,7 +1919,7 @@ class PetitionController extends Controller
      * @param \Illuminate\Http\Response
      */
     public function submit_application(Request $request)
-    {   
+    {
         if(Auth::check()){
 
         $user_id = Auth::user()->id;

@@ -62,22 +62,19 @@
 
         <!-- End Alert-->
 
-        <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="col-sm-12">
+        <div >
                     <a title="Add Role" href="{{ url('user-management/role/add') }}" class="btn btn-info btn-xm pull-right">
                         <i class="fa fa-plus"></i>
-                        Add Role</a>
-                </div>
-            </div>
+                        Add Role
+                    </a>
         </div>
-        </div>
+        <br/>
         @if(isset($roles) && count($roles) > 0)
 
         <div class="row">
             <div class="col-md-12">
-                <div class="card-body">
+                <div class="card">
+                    <div class="card-body">
                     <table class="table table-hover" id="table_id">
                         <thead>
                             <tr>
@@ -114,6 +111,7 @@
                         </tbody>
                     </table>
                     </div>
+                </div>
                 </div>
         </div>
 

@@ -2,7 +2,63 @@
 
 namespace App\Http\Controllers\Advocates;
 
-class RenewalController
+use App\Http\Controllers\Controller;
+use App\Models\Petitions\PetitionForm;
+use App\Models\Petitions\Document;
+use App\Models\Petitions\Application;
+use App\Models\Petitions\ApplicationMove;
+use App\Models\Petitions\AttachmentMove;
+use App\Models\Petitions\Qualification;
+use App\Models\Petitions\WorkExperience;
+use App\Models\Petitions\LlbCollege;
+use App\Models\Petitions\LstCollege;
+use App\Models\Petitions\Firm;
+use App\Models\Petitions\FirmRequestConfirmation;
+use App\Models\Petitions\FirmMembership;
+use App\Models\Petitions\FirmAddress;
+use App\Profile;
+use App\User;
+use App\Mail\VerifyFirm;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Validator,Redirect;
+use Illuminate\Database\QueryException;
+
+class RenewalController extends Controller
 {
+
+    /**
+     * get renewal index page
+     * @return \Illuminate\Http\Response
+     */
+    public function get_index()
+    {
+        if(Auth::check()){
+            $user_id = Auth::user()->id;
+            $profile = Profile::where('user_id', $user_id)->first();
+            $progress = ApplicationMove::where('user_id', $user_id)->first();
+            $petition_form = PetitionForm::where('user_id', $user_id)->first();
+            $qualification = Qualification::where('user_id', $user_id)->first();
+            $attachment = Document::where('user_id', $user_id)->first();
+            $llb = LlbCollege::where('user_id', $user_id)->first();
+            $lst = LstCollege::where('user_id', $user_id)->first();
+            $experience = WorkExperience::where('user_id', $user_id)->first();
+            //dd($profile);exit;
+            return view('advocates.renewal.index', [
+                'petition_form' => $petition_form,
+                'profile' => $profile,
+                'progress' => $progress,
+                'qualification' => $qualification,
+                'attachment' => $attachment,
+                'llb' => $llb,
+                'lst' => $lst,
+                'experience' => $experience,
+            ]);
+        }
+        return Redirect::to("auth/login")->withErrors('You do not have access!');
+    }
 
 }

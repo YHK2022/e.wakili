@@ -112,7 +112,7 @@
 			$("#searchadvocate").keyup(function(){
 			var str=  $("#searchadvocate").val();
 			if(str == "") {
-			$( "#Advprofile" ).html("<b>Advocate information will be listed here...</b>");
+			$( "#Advprofile" ).html("<b>AdvocateCategory information will be listed here...</b>");
 			}else {
 			$.get( "{{ url('public/search-advocate?id=') }}"+str, function( data ) {
 			$( "#Advprofile" ).html( data );

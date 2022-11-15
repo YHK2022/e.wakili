@@ -38,6 +38,156 @@
                 display: none;
             }
 
+            .blink {
+                animation: blink-animation 1s steps(5, start) infinite;
+                -webkit-animation: blink-animation 1s steps(5, start) infinite;
+            }
+            @keyframes blink-animation {
+                to {
+                    visibility: hidden;
+                }
+            }
+            @-webkit-keyframes blink-animation {
+                to {
+                    visibility: hidden;
+                }
+            }
+
+            /* Accordion css starts*/
+
+            .container {
+                max-width: 960px;
+            }
+
+
+            /* */
+
+            .panel-default>.panel-heading {
+                color: #333;
+                background-color: #fff;
+                border-color: #e4e5e7;
+                padding: 0;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            .panel-default>.panel-heading a {
+                display: block;
+                padding: 10px 15px;
+            }
+
+            .panel-default>.panel-heading a:after {
+                content: "";
+                position: relative;
+                top: 1px;
+                display: inline-block;
+                font-family: 'Glyphicons Halflings';
+                font-style: normal;
+                font-weight: 100;
+                line-height: 1;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                float: right;
+                transition: transform .25s linear;
+                -webkit-transition: -webkit-transform .25s linear;
+            }
+
+            .panel-default>.panel-heading a[aria-expanded="true"] {
+                background-color: #eee;
+            }
+
+            .panel-default>.panel-heading a[aria-expanded="true"]:after {
+                content: "\2212";
+                -webkit-transform: rotate(180deg);
+                transform: rotate(180deg);
+            }
+
+            .panel-default>.panel-heading a[aria-expanded="false"]:after {
+                content: "\002b";
+                -webkit-transform: rotate(90deg);
+                transform: rotate(90deg);
+            }
+
+            /* Accordion css ends*/
+
+            /* Certificate css starts*/
+
+            .certificate-container {
+                padding: 10px;
+                width: 100%;
+            }
+            .certificate {
+                border: 20px solid #0C5280;
+                padding: 25px;
+                height: 100%;
+                position: relative;
+            }
+
+            .certificate:after {
+                content: '';
+                top: 0px;
+                left: 0px;
+                bottom: 0px;
+                right: 0px;
+                position: absolute;
+                background-image: url('images/user.png');
+                background-size: 100%;
+                z-index: -1;
+            }
+
+
+            .certificate-title {
+                text-align: center;
+            }
+
+            .certificate-body {
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 28px;
+                color: #0a0a0a;
+            }
+
+            h2 {
+                font-size: 18px;
+                color: #0a0a0a;
+            }
+
+            h3 {
+                font-size: 18px;
+                color: red;
+            }
+
+            h4 {
+                font-size: 16px;
+                color: #0a0a0a;
+                text-align: justify;
+            }
+            .student-name {
+                font-size: 24px;
+            }
+
+            .certificate-content {
+                margin: 0 auto;
+                width: 750px;
+            }
+
+            .about-certificate {
+                width: 380px;
+                margin: 0 auto;
+            }
+
+            .topic-description {
+
+                text-align: center;
+            }
+
+            /* Certificate css ends*/
+
+
         </style>
 
     </head>
@@ -478,6 +628,22 @@
                             $(this).text('Show Address');
                         }
                     });
+
+
+                    //Show div bases on select value for payment method selection
+
+                    $(document).ready(function(){
+                        $('#myselection').on('change', function(){
+                            var demovalue = $(this).val();
+                            $("div.myDiv").hide();
+                            $("#show"+demovalue).show();
+                        });
+                    });
+
+                    //go back function
+                    function goBack() {
+                        window.history.back();
+                    }
 
 
             </script>
