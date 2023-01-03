@@ -16,7 +16,7 @@
 							<h2 style="color: white;">Know the advocate</h2>
 							<form class="cours-search">
 								<div class="input-group">
-									<input type="text" autocomplete="off" name="search" id="searchadvocate" class="searchtxt form-control" placeholder="Search by name or roll number	">
+									<input type="text" autocomplete="off" name="search" id="searchadvocate" class="searchtxt form-control" spellcheck="false" placeholder="Search by name or roll number">
 
 								</div>
 								<!-- Display search results -->

@@ -22,6 +22,8 @@ use App\Models\Petitions\FirmMembership;
 use App\Models\Petitions\FirmAddress;
 use App\Profile;
 use App\User;
+use App\Models\Petitions\Bill;
+use App\Models\Masterdata\BillItem;
 use App\Mail\VerifyFirm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -31,14 +33,14 @@ use Illuminate\Support\Facades\DB;
 use Validator,Redirect;
 use Illuminate\Database\QueryException;
 
-class FirmController extends Controller
+class BillController extends Controller
 {
 
     /**
-     * get firm index page
+     * get pending bills index page
      * @return \Illuminate\Http\Response
      */
-    public function get_index()
+    public function get_bill_index()
     {
         if(Auth::check()){
             $user_id = Auth::user()->id;
@@ -59,40 +61,18 @@ class FirmController extends Controller
 
             $cur_year = date('Y');
 
-            //check membership
-            if(FirmMembership::where('profile_id', $profile_id)->exists()){
-                $since = FirmMembership::where('profile_id', $profile_id)->first()->since;
-                $firm_id = FirmMembership::where('profile_id', $profile_id)->first()->firm_id;
-                $firm_branch_id = FirmMembership::where('profile_id', $profile_id)->first()->firm_branch_id;
-                $memberships = FirmMembership::where('profile_id', $profile_id)->orderBy('till', 'desc')->get();
+            //check bill
+            if(Bill::where('profile_id', $profile_id)->exists()){
+                $bills = Bill::where('profile_id', $profile_id)->orderBy('bill_date', 'desc')->get();
             }else{
-                $since = "No data";
-                $memberships = "No data";
-                $firm_id = 0;
-                $firm_branch_id = 0;
+                $bills = "No data";
             }
-
-            //check firm
-            if(Firm::where('id', $firm_id)->exists()){
-                $firms = Firm::where('id', $firm_id)->get();
-            }else{
-                $firms = "No data";
-            }
-
-            //check firm address / branch
-            if(FirmAddress::where('id', $firm_branch_id)->exists()){
-                $firm_addresses = FirmAddress::where('id', $firm_branch_id)->get();
-            }else{
-                $firm_addresses = "No data";
-            }
-
 
             //dd($profile);exit;
-            return view('advocates.firm.index', [
+            return view('advocates.bill.bill_index', [
                 'petition_form' => $petition_form,
                 'profile' => $profile,
                 'profile_id' => $profile_id,
-                'since' => $since,
                 'cur_year' => $cur_year,
                 'progress' => $progress,
                 'qualification' => $qualification,
@@ -100,9 +80,7 @@ class FirmController extends Controller
                 'llb' => $llb,
                 'lst' => $lst,
                 'experience' => $experience,
-                'firms' => $firms,
-                'firm_addresses' => $firm_addresses,
-                'memberships' => $memberships,
+                'bills' => $bills,
             ]);
         }
         return Redirect::to("auth/login")->withErrors('You do not have access!');
@@ -183,6 +161,7 @@ class FirmController extends Controller
     }
 
 }
+
 
 
 

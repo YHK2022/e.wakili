@@ -61,4 +61,79 @@ class RequestController extends Controller
         return Redirect::to("auth/login")->withErrors('You do not have access!');
     }
 
+    /**
+     * Submit out of time request
+     * @param int $int
+     * @param \Illuminate\Http\Response
+     */
+    public function out_of_time_request(Request $request)
+    {
+        if(Auth::check()){
+
+            $user_id = Auth::user()->id;
+            $profile = Profile::where('user_id', $user_id)->first();
+            $progress = ApplicationMove::where('user_id', $user_id)->first();
+            $petition_form = PetitionForm::where('user_id', $user_id)->first();
+            $qualification = Qualification::where('user_id', $user_id)->first();
+            $attachment = Document::where('user_id', $user_id)->first();
+            $llb = LlbCollege::where('user_id', $user_id)->first();
+            $lst = LstCollege::where('user_id', $user_id)->first();
+            $experience = WorkExperience::where('user_id', $user_id)->first();
+
+
+
+
+            //Save application information values
+            $profile_id = Profile::where('user_id', $user_id)->first()->id;
+            $submitdate = date('Y-m-d H:i:s');
+            $uuid = Str::uuid();
+            $appl_type = "PERMIT_RENEWAL";
+            $status = "PENDING";
+
+
+            $application = new Application();
+            $application->submission_at = $submitdate;
+            $application->active = "true";
+            $application->uid = $uuid;
+            $application->type = $appl_type;
+            $application->qualification = $qualification;
+            $application->status = $status;
+            $application->resubmission = "true";
+            $application->un_reviewed = "0";
+            $application->current_stage = "2";
+            $application->profile_id = $profile_id;
+            $application->workflow_process_id = "1";
+            $application->actionstatus = "0";
+            $application->stage = "0";
+            dd($application);exit;
+            $application->save();
+
+            if ($request->hasfile('files')) {
+                $files = $request->file('files');
+
+                foreach($files as $file) {
+
+                    $filename = pathinfo($file, PATHINFO_FILENAME);
+                    $extension = $request->file('files')->getClientOriginalExtension();
+                    $fileNameToStore = $filename.'_'.time().'.'.$extension;
+                    $request->file('file')->storeAs('public/files', $fileNameToStore);
+
+                    $document = new Document;
+                    $document->user_id = $user_id;
+                    $document->name = $file['names'];
+                    $document->file = $fileNameToStore;
+                    $document->author = $profile_id;
+                    $document->upload_date = $submitdate;
+                    $document->status = $status;
+                    //dd($document);exit;
+                    $document->save();
+                }
+            }
+            return back()->with('success', 'Request submitted successfully');
+
+        }
+        return Redirect::to("auth/login")->withErrors('You do not have access!');
+    }
+
+
 }

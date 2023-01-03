@@ -1,8 +1,8 @@
-@extends('adv-static')
+@extends('mgt-static')
 
 @section('title')
     @parent
-    | Renewal
+    | Petition Applications
 @stop
 
 @section('content')
@@ -12,10 +12,10 @@
                 <div class="row align-items-end">
                     <div class="col-lg-8">
                         <div class="page-header-title">
-                            <i class="ik ik-edit bg-red"></i>
+                            <i class="ik ik-lock bg-red"></i>
                             <div class="d-inline">
-                                <h5>Practising & Notary Public Certificate Renewal</h5>
-                                <span>{{ Auth::user()->full_name }} - {{ Auth::user()->email }}</span>
+                                <h5>Petition Applications</h5>
+                                <span>Under Review</span>
                             </div>
                         </div>
                     </div>
@@ -23,9 +23,9 @@
                         <nav class="breadcrumb-container" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="{{ url('auth/advocate-profile') }}"><i class="ik ik-home"></i></a>
-                                    <li class="breadcrumb-item active" aria-current="page">Renewal</li>
+                                    <a href="{{ url('auth/dashboard') }}"><i class="ik ik-home"></i></a>
                                 </li>
+                                <li class="breadcrumb-item active" aria-current="page">Under Review</li>
                             </ol>
                         </nav>
                     </div>
@@ -66,18 +66,47 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="col-12">
-                                <p class="lead"><i class="ik ik-edit"></i> Application for Practising Certificate {{ $renew_year }} </p><hr/>
-                                <strong style="color: #ee1e2d;"> Your Practising Certificate is valid<hr></strong>
-                            </div>
+                            <table class="table table-hover" id="table_id">
+                                <thead>
+                                <tr>
+                                    <th id="table_id" data-priority="1">#</th>
+                                    <th id="table_id">Applicant Name</th>
+                                    <th id="table_id">Application Type</th>
+                                    <th id="table_id">Current Stage</th>
+                                    <th id="table_id">Status</th>
+                                    <th id="table_id">Submitted Date</th>
+                                    <th id="table_id">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($applications as $key => $application)
+                                    <tr>
+                                        <td id="table_id">{{++$key}}</td>
+                                        <td id="table_id">{{$application->profile_detail->fullname}}</td>
+                                        <td id="table_id">{{$application->type}}</td>
+                                        <td id="table_id"> Front Desk </td>
+                                        <td id="table_id">{{$application->status}}</td>
+                                        <td id="table_id">{{$application->submission_at}}</td>
+                                        <td id="table_id">
+                                            <div class="table-actions">
+
+                                            </div>
+                                        </td>
+                                    </tr>
+
+
+                                @endforeach
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-
         </div>
     </div>
 
 @endsection
+
 

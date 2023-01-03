@@ -60,10 +60,7 @@
 	<!-- REVOLUTION SLIDER END -->
 
 	<style>
-		.list-group-item:hover {
-			background: #dc143c;
-			color: #fff;
-		}
+
 	</style>
 
 </head>
@@ -103,21 +100,33 @@
 <script src="{{ asset('public/js/contact.js') }}"></script>
 
 <script>
+
+    //go back funtion
+    function goBack() {
+        window.history.back();
+    }
+
 		$(window).on("load",function(){
      	 	$("#pageloader-overlay").fadeOut("slow");
 		});
 
-		// Live search law firms and workplace
+		// Live search Advocates for Public
 		$(document).ready(function(){
 			$("#searchadvocate").keyup(function(){
 			var str=  $("#searchadvocate").val();
 			if(str == "") {
-			$( "#Advprofile" ).html("<b>AdvocateCategory information will be listed here...</b>");
+			    $( "#Advprofile" ).html("<b>Advocate information will be listed here...</b>");
 			}else {
-			$.get( "{{ url('public/search-advocate?id=') }}"+str, function( data ) {
-			$( "#Advprofile" ).html( data );
-			});
-			}
+                $.get( "{{ url('public/search-advocate?id=') }}"+str, function( data ) {
+                    if(data == ""){
+                        $("#Advprofile").html('<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i> <span class="font-periksa animated infinite flash">Loading</span>')
+                            .fadeIn(200);
+                    }else {
+                        $( "#Advprofile" ).html( data );
+                    }
+
+                });
+            }
 			});
 		});
 </script>

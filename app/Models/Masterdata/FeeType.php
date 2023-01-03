@@ -1,20 +1,23 @@
 <?php
 
-namespace App\Models\Advocate;
+namespace App\Models\Masterdata;
 
+use App\Models\Masterdata\Fee;
 use App\Models\Petitions\Bill;
-use App\Profile;
 use Illuminate\Database\Eloquent\Model;
 
-class Advocate extends Model
+class FeeType extends Model
 {
-    public function profile()
+
+    public function fee()
     {
-        return $this->belongsTo(Profile::class, 'profile_id');
+        return $this->hasMany(Fee::class);
     }
 
     public function bill()
     {
         return $this->hasMany(Bill::class);
     }
+
 }
+

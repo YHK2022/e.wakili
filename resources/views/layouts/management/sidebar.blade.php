@@ -282,6 +282,8 @@
                         \Request::is('settings/region') ||
                         \Request::is('settings/petition-session')||
                         \Request::is('settings/venue')||
+                        \Request::is('settings/stage') ||
+                        \Request::is('settings/batch') ||
                         \Request::is('settings/district')
                         )
                         class="nav-item has-sub active open" @endif class="nav-item has-sub">
@@ -292,6 +294,8 @@
                           <a @if(\Request::is('settings/region')) class="menu-item active" @endif href="{{ url('settings/region') }}" class="menu-item">Region </a>
                           <a @if(\Request::is('settings/district')) class="menu-item active" @endif href="{{ url('settings/district') }}" class="menu-item">District </a>
                           <a @if(\Request::is('settings/petition-session')) class="menu-item active" @endif href="{{ url('settings/petition-session') }}" class="menu-item">Petition Sessions </a>
+                          <a @if(\Request::is('settings/batch')) class="menu-item active" @endif href="{{ url('settings/batch') }}" class="menu-item">Renewal Batches </a>
+                          <a @if(\Request::is('settings/stage')) class="menu-item active" @endif href="{{ url('settings/stage') }}" class="menu-item">Action Stages </a>
                           <a @if(\Request::is('settings/venue')) class="menu-item active" @endif href="{{ url('settings/venue') }}" class="menu-item">Appearance Venue </a>
                       </div>
                   </div>

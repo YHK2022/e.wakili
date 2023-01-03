@@ -71,12 +71,12 @@
                       <a href="{{ url('firm') }}"><i class="ik ik-layers"></i><span>Firm & Work Place</span></a>
                   </div>
 
-                  <div @if(\Request::is('bill/pending-bill') ||
-                           \Request::is('bill/paid-bill')) class="nav-item has-sub active open" @endif class="nav-item has-sub">
+                  <div @if(\Request::is('bill/bill') ||
+                           \Request::is('bill/payment')) class="nav-item has-sub active open" @endif class="nav-item has-sub">
                       <a class="dropdown" href="javascript:void(0)"><i class="ik ik-clipboard"></i><span>Bills & Payments</span></a>
                       <div class="submenu-content">
-                          <a @if(\Request::is('bill/pending-bill')) class="menu-item active" @endif href="{{ url('bill/pending-bill') }}" class="menu-item">Pending Bills</a>
-                          <a @if(\Request::is('bill/paid-bill')) class="menu-item active" @endif href="{{ url('bill/paid-bill') }}" class="menu-item">Paid Bills</a>
+                          <a @if(\Request::is('bill/bill')) class="menu-item active" @endif href="{{ url('bill/bill') }}" class="menu-item">Bills</a>
+                          <a @if(\Request::is('bill/payment')) class="menu-item active" @endif href="{{ url('bill/payment') }}" class="menu-item">Payments</a>
                       </div>
                   </div>
 

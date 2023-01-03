@@ -139,13 +139,18 @@ Route::group(['prefix' => 'petition'], function() {
 Route::group(['prefix' => 'renewal'], function(){
     Route::get('/', 'Advocates\RenewalController@get_index');
 
-
+    // TLS compliance check request and response
+    Route::match(['get', 'post'], '/tls-check/{id}', 'Advocates\TlsCheckController@compliance_check');
+    Route::match(['get', 'post'],'tls-compliance-response', 'Advocates\TlsCheckController@compliance_responce');
 });
 
 //***** Requests Permit ***********//
 
 Route::group(['prefix' => 'request'], function(){
     Route::get('/', 'Advocates\RequestController@get_index');
+
+    // Renew Out of Time
+    Route::match(['get', 'post'], '/out-of-time', 'Advocates\RequestController@out_of_time_request');
 
 
 });
@@ -169,15 +174,14 @@ Route::group(['prefix' => 'my-certificate'], function(){
 
 Route::group(['prefix' => 'firm'], function(){
     Route::get('/', 'Advocates\FirmController@get_index');
-
-
+    Route::match(['get', 'post'], '/view/{id}', 'Advocates\FirmController@view_firm');
 });
 
 //***** Bills & Payments ***********//
 
 Route::group(['prefix' => 'bill'], function(){
-    Route::get('/pending-bill', 'Advocates\BillController@get_pending_index');
-    Route::get('/paid-bill', 'Advocates\BillController@get_paid_index');
+    Route::get('/bill', 'Advocates\BillController@get_bill_index');
+    Route::get('/payment', 'Advocates\BillController@get_payment_index');
 
 
 });
@@ -234,34 +238,47 @@ Route::group(['prefix' => 'settings'], function() {
     Route::match(['get', 'post'], '/advocate-category/delete/{id}', 'Management\AdvocateCategoryController@delete_category');
 
     //--Application/Request Types ----
-    Route::get('/request-type', 'Management\RequestTypeCOntroller@get_index');
-    Route::post('/request-type/add', 'Management\RequestTypeCOntroller@add_request');
-    Route::match(['get', 'post'], '/request-type/edit/{id}', 'Management\RequestTypeCOntroller@edit_request');
-    Route::match(['get', 'post'], '/request-type/delete/{id}', 'Management\RequestTypeCOntroller@delete_request');
+    Route::get('/request-type', 'Management\RequestTypeController@get_index');
+    Route::post('/request-type/add', 'Management\RequestTypeController@add_request');
+    Route::match(['get', 'post'], '/request-type/edit/{id}', 'Management\RequestTypeController@edit_request');
+    Route::match(['get', 'post'], '/request-type/delete/{id}', 'Management\RequestTypeController@delete_request');
 
     //--Regions ----
-    Route::get('/region', 'Management\RegionCOntroller@get_index');
-    Route::post('/region/add', 'Management\RegionCOntroller@add_region');
-    Route::match(['get', 'post'], '/region/edit/{id}', 'Management\RegionCOntroller@edit_region');
-    Route::match(['get', 'post'], '/region/delete/{id}', 'Management\RegionCOntroller@delete_region');
+    Route::get('/region', 'Management\RegionController@get_index');
+    Route::post('/region/add', 'Management\RegionController@add_region');
+    Route::match(['get', 'post'], '/region/edit/{id}', 'Management\RegionController@edit_region');
+    Route::match(['get', 'post'], '/region/delete/{id}', 'Management\RegionController@delete_region');
 
     //--Districts ----
-    Route::get('/district', 'Management\DistrictCOntroller@get_index');
-    Route::post('/district/add', 'Management\DistrictCOntroller@add_district');
-    Route::match(['get', 'post'], '/district/edit/{id}', 'Management\DistrictCOntroller@edit_district');
-    Route::match(['get', 'post'], '/district/delete/{id}', 'Management\DistrictCOntroller@delete_district');
+    Route::get('/district', 'Management\DistrictController@get_index');
+    Route::post('/district/add', 'Management\DistrictController@add_district');
+    Route::match(['get', 'post'], '/district/edit/{id}', 'Management\DistrictController@edit_district');
+    Route::match(['get', 'post'], '/district/delete/{id}', 'Management\DistrictController@delete_district');
 
     //--Petition Sessions ----
-    Route::get('/petition-session', 'Management\PetitionSessionCOntroller@get_index');
-    Route::post('/petition-session/add', 'Management\PetitionSessionCOntroller@add_session');
-    Route::match(['get', 'post'], '/petition-session/edit/{id}', 'Management\PetitionSessionCOntroller@edit_session');
-    Route::match(['get', 'post'], '/petition-session/delete/{id}', 'Management\PetitionSessionCOntroller@delete_session');
+    Route::get('/petition-session', 'Management\PetitionSessionController@get_index');
+    Route::post('/petition-session/add', 'Management\PetitionSessionController@add_session');
+    Route::match(['get', 'post'], '/petition-session/edit/{id}', 'Management\PetitionSessionController@edit_session');
+    Route::match(['get', 'post'], '/petition-session/delete/{id}', 'Management\PetitionSessionController@delete_session');
+
+    //--Renewal Batches ----
+    Route::get('/batch', 'Management\RenewalBatchController@get_index');
+    Route::post('/batch/add', 'Management\RenewalBatchController@add_batch');
+    Route::match(['get', 'post'], '/batch/edit/{id}', 'Management\RenewalBatchController@edit_batch');
+    Route::match(['get', 'post'], '/batch/delete/{id}', 'Management\RenewalBatchController@delete_batch');
 
     //--Appearance Venue ----
-    Route::get('/venue', 'Management\VenueCOntroller@get_index');
-    Route::post('/venue/add', 'Management\VenueCOntroller@add_venue');
-    Route::match(['get', 'post'], '/venue/edit/{id}', 'Management\VenueCOntroller@edit_venue');
-    Route::match(['get', 'post'], '/venue/delete/{id}', 'Management\VenueCOntroller@delete_venue');
+    Route::get('/venue', 'Management\VenueController@get_index');
+    Route::post('/venue/add', 'Management\VenueController@add_venue');
+    Route::match(['get', 'post'], '/venue/edit/{id}', 'Management\VenueController@edit_venue');
+    Route::match(['get', 'post'], '/venue/delete/{id}', 'Management\VenueController@delete_venue');
+
+    //--Action Stages ----
+    Route::get('/stage', 'Management\StageController@get_index');
+    Route::post('/stage/add', 'Management\StageController@add_session');
+    Route::match(['get', 'post'], '/stage/edit/{id}', 'Management\StageController@edit_session');
+    Route::match(['get', 'post'], '/stage/delete/{id}', 'Management\StageController@delete_session');
+
 
 
 });
@@ -278,6 +295,19 @@ Route::group(['prefix' => 'advocate'], function() {
 
 });
 //****Advocate Profile Routes Ends****** //
+
+//****Petition Applications Routes Start****** //
+Route::group(['prefix' => 'petition'], function() {
+
+    //--Under Review ----
+    Route::get('/under-review', 'Management\PetitionApplicationUnderReviewController@get_index');
+    Route::match(['get', 'post'], '/view/{id}', 'Management\PetitionApplicationController@view_profile');
+
+
+});
+//****Petition Applications Routes Ends****** //
+
+
 // ****** ENDS *********//
 
 
@@ -286,6 +316,7 @@ Route::group(['prefix' => 'advocate'], function() {
 Route::group(['prefix' => 'public'], function() {
 
     Route::get('/search-advocate','Advocates\AdvocateController@search_advocate');
+    Route::match(['get', 'post'], '/view-profile/{id}', 'Advocates\AdvocateController@public_view_profile');
 
 
 });

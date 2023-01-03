@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Advocates;
 
 use App\Http\Controllers\Controller;
 use App\Models\Advocate\Advocate;
+use App\Models\Masterdata\RenewalBatch;
+use App\Models\Petitions\Bill;
 use App\Models\Petitions\PetitionEducation;
 use App\Models\Petitions\PetitionForm;
 use App\Models\Petitions\Document;
@@ -194,6 +196,9 @@ class AdvocateController extends Controller
     public function search_advocate(Request $request)
     {
         $search_val = $request->id;
+        //check current renewal year
+        $year = RenewalBatch::where('active', 'true')->first()->year;
+        $cur_year = date('Y');
 
         if (is_null($search_val))
         {
@@ -202,38 +207,162 @@ class AdvocateController extends Controller
         }
         else
         {
-        $posts_data = Profile::where('fullname','LIKE',"%{$search_val}%")->get();
+            if ( is_numeric($search_val) ) {
+                $posts_data = Advocate::where('roll_no','ILIKE',"%{$search_val}%")->get();
 
-        $output = '';
-        $modal = '';
+                $output = '';
 
-        if (count($posts_data)>0) {
+                if (count($posts_data)>0) {
 
-            $output = '<ul class="list-group" style="display: block; position: relative;">';
+                    $output = '<ul class="list-group" style="display: block; position: relative;text-align: left;">';
 
-            foreach ($posts_data as $row){
-                $register = url('public/show-advocate',$row->id);
-                $image = url(asset('storage/files/'.$row->picture));
-                $output .= '<li class="list-group-item">';
-                $output .= '<a href="'."#profile".$row->id.'" data-id="'.$row->id.'" data-toggle="modal" data-target="'."#profile".$row->id.'" style="width:90%;font-size:15px;color:black;hover-color:white;">'.$row->fullname;
-                $output .= '</a>';
-                $output .= '<div class="modal inmodal fade" id="'."#profile".$row->id.'" tabindex="-1" role="dialog" aria-hidden="true">'.'<div class="modal-dialog">'.'<div class="modal-content">'.'<div class="modal-body">'.'<center>'.'<img src="'.$image.'" name="aboutme" width="140" height="140" border="0" class="img-circle">'.'<br/>'.'<h3 class="media-heading">'.$row->fullname.'</h3>'.'<span>'.'<strong>'."Roll Number:".'</strong>'.'</span>'.'<span class="btn btn-danger">'."NIL".'</span>'.'</center>'.'<hr>'.'<center>'.'<p class="btn btn-danger">'.'<strong>'."Practicing History".'</strong>'.'</p>'.'<br>'.'</center>'.'</div>'.'<div class="modal-footer">'.'<center>'.'<button type="button" class="btn btn-default" data-dismiss="modal">'."Close".'</button>'.'</center>'.'</div>'.'</div>'.'</div>'.'</div>';
-                $output .= '</li>';
+                    foreach ($posts_data as $row){
+                        if($row->paid_year == $cur_year){
+                            $register = url('public/show-advocate',$row->id);
+                            $view = url('public/view-profile',$row->uid);
+                            $image = url(asset('storage/files/'.$row->picture));
+                            $output .= '<li class="list-group-item">';
+                            $output .= '<a href="'.$view.'" style="width:90%;font-size:15px;color:green;">'.$row->profile->fullname." ".'<span class="badge badge-pill badge-success" style="color: white;font-size: 15px;">'.$row->roll_no.'</span>'.'</a>';
+                            //$output .= '</a>';
+                            //$output .= '<div class="modal inmodal fade" id="'."#profile".$row->id.'" tabindex="-1" role="dialog" aria-hidden="true">'.'<div class="modal-dialog">'.'<div class="modal-content">'.'<div class="modal-body">'.'<center>'.'<br/>'.'<h3 class="media-heading">'.$row->fullname.'</h3>'.'<span>'.'<strong>'."Roll Number:".'</strong>'.'</span>'.'<span class="btn btn-danger">'."NIL".'</span>'.'</center>'.'<hr>'.'<center>'.'<p class="btn btn-danger">'.'<strong>'."Practicing History".'</strong>'.'</p>'.'<br>'.'</center>'.'</div>'.'<div class="modal-footer">'.'<center>'.'<button type="button" class="btn btn-default" data-dismiss="modal">'."Close".'</button>'.'</center>'.'</div>'.'</div>'.'</div>'.'</div>';
+                            $output .= '</li>';
+                        }else{
+                            $register = url('public/show-advocate',$row->id);
+                            $view = url('public/view-profile',$row->uid);
+                            $image = url(asset('storage/files/'.$row->picture));
+                            $output .= '<li class="list-group-item">';
+                            $output .= '<a href="'.$view.'" style="width:90%;font-size:15px;color:red;">'.$row->profile->fullname." ".'<span class="badge badge-pill badge-danger" style="color: white;font-size: 15px;">'.$row->roll_no.'</span>'.'</a>';
+                            //$output .= '</a>';
+                            //$output .= '<div class="modal inmodal fade" id="'."#profile".$row->id.'" tabindex="-1" role="dialog" aria-hidden="true">'.'<div class="modal-dialog">'.'<div class="modal-content">'.'<div class="modal-body">'.'<center>'.'<br/>'.'<h3 class="media-heading">'.$row->fullname.'</h3>'.'<span>'.'<strong>'."Roll Number:".'</strong>'.'</span>'.'<span class="btn btn-danger">'."NIL".'</span>'.'</center>'.'<hr>'.'<center>'.'<p class="btn btn-danger">'.'<strong>'."Practicing History".'</strong>'.'</p>'.'<br>'.'</center>'.'</div>'.'<div class="modal-footer">'.'<center>'.'<button type="button" class="btn btn-default" data-dismiss="modal">'."Close".'</button>'.'</center>'.'</div>'.'</div>'.'</div>'.'</div>';
+                            $output .= '</li>';
+                        }
+
+                    }
+
+                    $output .= '</ul>';
+                }
+                else {
+                    $output .= '<li class="list-group-item">'.'<table>'.'<tr>'.'<td style="width:90%;font-size:15px;color:red;">'.'No Advocate match with search results, try again with valid input !'.'</td>'.'<td style="width:10%">'.'</td>'.'</tr>'.'</table>'.'</li>';
+                }
+
+                return $output;
+            } else {
+                //$posts_data = Profile::where('fullname','ILIKE',"%{$search_val}%")->get();
+
+                $profile = Profile::where('fullname','ILIKE',"%{$search_val}%")->pluck('id');
+                $posts_data = Advocate::whereIn('profile_id',$profile)->get();
+
+                $output = '';
+                $modal = '';
+
+                if (count($posts_data)>0) {
+
+                    $output = '<ul class="list-group" style="display: block; position: relative;text-align: left;">';
+
+                    foreach ($posts_data as $row){
+                        if($row->paid_year == $cur_year){
+                            $register = url('public/show-advocate',$row->id);
+                            $view = url('public/view-profile',$row->uid);
+                            $image = url(asset('storage/files/'.$row->picture));
+                            $output .= '<li class="list-group-item">';
+                            $output .= '<a href="'.$view.'" style="width:90%;font-size:15px;color:green;">'.$row->profile->fullname." ".'<span class="badge badge-pill badge-success" style="color: white;font-size: 15px;">'.$row->roll_no.'</span>'.'</a>';
+                            //$output .= '</a>';
+                            //$output .= '<div class="modal inmodal fade" id="'."#profile".$row->id.'" tabindex="-1" role="dialog" aria-hidden="true">'.'<div class="modal-dialog">'.'<div class="modal-content">'.'<div class="modal-body">'.'<center>'.'<br/>'.'<h3 class="media-heading">'.$row->fullname.'</h3>'.'<span>'.'<strong>'."Roll Number:".'</strong>'.'</span>'.'<span class="btn btn-danger">'."NIL".'</span>'.'</center>'.'<hr>'.'<center>'.'<p class="btn btn-danger">'.'<strong>'."Practicing History".'</strong>'.'</p>'.'<br>'.'</center>'.'</div>'.'<div class="modal-footer">'.'<center>'.'<button type="button" class="btn btn-default" data-dismiss="modal">'."Close".'</button>'.'</center>'.'</div>'.'</div>'.'</div>'.'</div>';
+                            $output .= '</li>';
+                        }else{
+                            $register = url('public/show-advocate',$row->id);
+                            $view = url('public/view-profile',$row->uid);
+                            $image = url(asset('storage/files/'.$row->picture));
+                            $output .= '<li class="list-group-item">';
+                            $output .= '<a href="'.$view.'" style="width:90%;font-size:15px;color:red;">'.$row->profile->fullname." ".'<span class="badge badge-pill badge-danger" style="color: white;font-size: 15px;">'.$row->roll_no.'</span>'.'</a>';
+                            //$output .= '</a>';
+                            //$output .= '<div class="modal inmodal fade" id="'."#profile".$row->id.'" tabindex="-1" role="dialog" aria-hidden="true">'.'<div class="modal-dialog">'.'<div class="modal-content">'.'<div class="modal-body">'.'<center>'.'<br/>'.'<h3 class="media-heading">'.$row->fullname.'</h3>'.'<span>'.'<strong>'."Roll Number:".'</strong>'.'</span>'.'<span class="btn btn-danger">'."NIL".'</span>'.'</center>'.'<hr>'.'<center>'.'<p class="btn btn-danger">'.'<strong>'."Practicing History".'</strong>'.'</p>'.'<br>'.'</center>'.'</div>'.'<div class="modal-footer">'.'<center>'.'<button type="button" class="btn btn-default" data-dismiss="modal">'."Close".'</button>'.'</center>'.'</div>'.'</div>'.'</div>'.'</div>';
+                            $output .= '</li>';
+                        }
+
+                    }
+
+                    $output .= '</ul>';
+                }
+                else {
+                    $output .= '<li class="list-group-item">'.'<table>'.'<tr>'.'<td style="width:90%;font-size:15px;color:red;">'.'No Advocate match with search results, try again with valid input !'.'</td>'.'<td style="width:10%">'.'</td>'.'</tr>'.'</table>'.'</li>';
+                }
+
+                return $output;
             }
-
-            $output .= '</ul>';
-        }
-        else {
-            $output .= '<li class="list-group-item">'.'<table>'.'<tr>'.'<td style="width:90%;font-size:15px;color:red;">'.'No AdvocateCategory match with search results, try again with valid input !'.'</td>'.'<td style="width:10%">'.'</td>'.'</tr>'.'</table>'.'</li>';
-        }
-
-        return $output;
-
       }
 
-
-
     }
+
+
+    /**
+     * view advocate profile public
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
+    public function public_view_profile(Request $request, $id)
+    {
+
+            $cur_year = date('Y');
+
+            $practising = "PRACTISING";
+            $non_practising = "NON_PRACTISING";
+            $suspended = "SUSPENDED";
+            $retired = "RETIRED";
+            $deceased = "DECEASED";
+            $deferred = "DEFERRED";
+            $non_profit = "NON_PROFIT";
+            $struck_out = "STRUCK_OUT";
+
+            $cj = "IBRAHIM HAMISI JUMA";
+
+            $advocate = Advocate::where('uid', $id)->first();
+            $profile_id = Advocate::where('uid', $id)->first()->profile_id;
+
+            //check personal info
+            $profile = Profile::where('id', $profile_id)->first();
+
+            //check bills
+            if(Bill::where('profile_id', $profile_id)->exists()){
+                $bills = Bill::where('profile_id', $profile_id)->orderBy('paid_year', 'desc')->get();
+            }else{
+                $bills = 0;
+            }
+
+            //Check if requested to suspend
+            $appl_type = "PERMIT_SUSPENDED";
+            $apr_status = "APPROVE";
+            if(Application::where('profile_id', $profile_id)
+                            ->where('type', $appl_type)
+                            ->where('status', $apr_status)->exists()){
+                $suspend = 1;
+            }else{
+                $suspend = 0;
+            }
+
+
+
+            return view('public.advocate.view', [
+                'advocate' => $advocate,
+                'cur_year' => $cur_year,
+                'bills' => $bills,
+                'profile' => $profile,
+                'practising' => $practising,
+                'non_practising' => $non_practising,
+                'suspended' => $suspended,
+                'retired' => $retired,
+                'deceased' => $deceased,
+                'deferred' => $deferred,
+                'non_profit' => $non_profit,
+                'struck_out' => $struck_out,
+                'cj' => $cj,
+                'suspend' => $suspend,
+            ]);
+
+
+
+       }
+
 
 
 

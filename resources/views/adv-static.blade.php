@@ -187,6 +187,12 @@
 
             /* Certificate css ends*/
 
+            /* Show/Hide Div CSS */
+
+            .myDiv{
+                display:none;
+                padding:10px;
+            }
 
         </style>
 
