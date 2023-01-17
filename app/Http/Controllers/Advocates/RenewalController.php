@@ -13,6 +13,7 @@ use App\Models\Petitions\ApplicationMove;
 use App\Models\Petitions\AttachmentMove;
 use App\Models\Petitions\ProfileContact;
 use App\Models\Petitions\Qualification;
+use App\Models\Petitions\TlsPaymentCheck;
 use App\Models\Petitions\WorkExperience;
 use App\Models\Petitions\LlbCollege;
 use App\Models\Petitions\LstCollege;
@@ -53,6 +54,7 @@ class RenewalController extends Controller
             //dd($profile);exit;
 
             $profile_id = Profile::where('user_id', $user_id)->first()->id;
+            $uuid = Profile::where('user_id', $user_id)->first()->uid;
 
             // Check for renew year
             $renew_year = RenewalBatch::where('active', 'true')->first()->year;
@@ -83,6 +85,12 @@ class RenewalController extends Controller
             $second_deadline = RenewalBatch::where('active', 'true')->first()->second_deadline;
             $end_date = RenewalBatch::where('active', 'true')->first()->end_date;
 
+            // Check for TLS Payment check
+            if(TlsPaymentCheck::where('year', $renew_year)->where('profile_id', $profile_id)->exists()){
+                $tls_result = TlsPaymentCheck::where('profile_id', $profile_id)->where('year', $renew_year)->first()->check_result;
+            }else{
+                $tls_result = 0;
+            }
 
             if($paid_year < $renew_year){
                 // Calculate year difference between advocate paid year and renewal year
@@ -92,7 +100,65 @@ class RenewalController extends Controller
                     //echo "una malimbikizo";exit;
 
                     if($date <= $first_deadline){
-                        echo "Renew out of Time with penalties and accumulation plus current renewal without penalty ";exit;
+                        //echo "Renew out of Time with penalties and accumulation plus current renewal without penalty ";exit;
+
+                        //Check if already applied out of tme
+                        $app_type = "PERMIT_RENEWAL";
+
+                        if(RenewalHistory::where('year', $renew_year)->where('profile_id', $profile_id)->exists()){
+                            $renew_history = RenewalHistory::where('year', $renew_year)->where('profile_id', $profile_id)->select('application_id')->get();
+                        }else{
+                            $renew_history = "No data";
+                        }
+                        //echo $renew_history;exit;
+
+                        if($renew_history != "No data") {
+
+
+                            if (Application::whereIn('id', $renew_history)->where('type', $app_type)->exists()) {
+                                $application_status = Application::whereIn('id', $renew_history)->where('type', $app_type)->first()->status;
+                            } else {
+                                $application_status = "No data";
+                            }
+
+                        }else{
+                            $application_status = "No data";
+                        }
+                        //echo $application_status;exit;
+
+                        // Create bill Items
+
+                        // Accumulation fee
+                        $pc_accumulation = $practising_fee*$year_diff;
+                        $nc_accumulation = $notary_fee*$year_diff;
+                        $penalty_accumulation = $penalty*$year_diff;
+
+                        // Current year fee
+                        $pc_fee_amount = $practising_fee;
+                        $nc_fee_amount = $notary_fee;
+                        $total = $pc_fee_amount+$nc_fee_amount+$pc_accumulation+$nc_accumulation+$penalty_accumulation;
+
+                        return view('advocates.renewal.outoftime_without_penalty', [
+                            'petition_form' => $petition_form,
+                            'profile' => $profile,
+                            'profile_id' => $profile_id,
+                            'uuid' => $uuid,
+                            'progress' => $progress,
+                            'qualification' => $qualification,
+                            'attachment' => $attachment,
+                            'llb' => $llb,
+                            'lst' => $lst,
+                            'experience' => $experience,
+                            'renew_year' => $renew_year,
+                            'application_status' => $application_status,
+                            'pc_fee_amount' => $pc_fee_amount,
+                            'nc_fee_amount' => $nc_fee_amount,
+                            'penalty_accumulation' => $penalty_accumulation,
+                            'nc_accumulation' => $nc_accumulation,
+                            'pc_accumulation' => $pc_accumulation,
+                            'tls_result' => $tls_result,
+                            'total' => $total,
+                        ]);
                     }elseif ($date <= $end_date){
                         //echo "Renew out of Time with penalties and accumulation plus current renewal with penalty";exit;
 
@@ -112,7 +178,30 @@ class RenewalController extends Controller
                     //echo "hauna malimbikizo";exit;
 
                     if($date <= $first_deadline){
-                        echo "Apply for pc";exit;
+                        //echo "Apply for pc";exit;
+
+                        // Create bill Items
+                        $pc_fee_amount = $practising_fee;
+                        $nc_fee_amount = $notary_fee;
+                        $total = $pc_fee_amount+$nc_fee_amount;
+
+                        return view('advocates.renewal.apply_for_pc', [
+                            'petition_form' => $petition_form,
+                            'profile' => $profile,
+                            'profile_id' => $profile_id,
+                            'progress' => $progress,
+                            'qualification' => $qualification,
+                            'attachment' => $attachment,
+                            'llb' => $llb,
+                            'lst' => $lst,
+                            'experience' => $experience,
+                            'renew_year' => $renew_year,
+                            'pc_fee_amount' => $pc_fee_amount,
+                            'nc_fee_amount' => $nc_fee_amount,
+                            'total' => $total,
+                            'tls_result' => $tls_result,
+                        ]);
+
                     }elseif ($date <= $second_deadline){
                         echo "Apply for pc with penalty";exit;
                     }elseif ($date <= $end_date){
@@ -136,6 +225,9 @@ class RenewalController extends Controller
                                 $application_status = "No data";
                             }
 
+                        }
+                        else{
+                            $application_status = "No data";
                         }
                         //echo $application_status;exit;
 

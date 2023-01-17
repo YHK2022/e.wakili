@@ -34,6 +34,7 @@ Route::group(['prefix' => 'auth'], function() {
     Route::get('/register', 'AuthController@register');
     Route::get('/dashboard', 'AuthController@get_dashboard');
     Route::get('/advocate-profile', 'AuthController@advocate_profile');
+    Route::get('/petitioner-profile', 'AuthController@petitioner_profile');
     Route::post('/post-login', ['as' => 'login', 'uses' => 'AuthController@postLogin']);
     Route::post('/account/advocate', 'AuthController@register_advocate');
     Route::post('/account/attorney', 'AuthController@register_attorney');
@@ -151,6 +152,9 @@ Route::group(['prefix' => 'request'], function(){
 
     // Renew Out of Time
     Route::match(['get', 'post'], '/out-of-time', 'Advocates\RequestController@out_of_time_request');
+
+    // Renew Out of Time with accumulation without current penalty
+    Route::match(['get', 'post'], '/out-of-time-without-penalty/{id}', 'Advocates\RequestController@outoftime_without_penalty_request');
 
 
 });

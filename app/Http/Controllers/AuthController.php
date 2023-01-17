@@ -29,7 +29,11 @@ use Session;
 
 class AuthController extends Controller
 {
-
+    /**
+     * view index page
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
     public function index()
     {
         return view('auth.login');
@@ -40,12 +44,21 @@ class AuthController extends Controller
         return view('auth.advocate-register');
     }
 
+    /**
+     * view reset password
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
     public function resetPassword()
     {
         return view('auth.reset-password');
     }
 
-
+    /**
+     * view send password reset code
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
     public function postResetPassword(Request $request)
     {
         request()->validate([
@@ -65,6 +78,11 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * Login function
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
     public function postLogin(Request $request)
     {
         request()->validate([
@@ -84,12 +102,17 @@ class AuthController extends Controller
             $user = Auth::user();
             $role = $user->getRoleNames()->first();
 
-            //check user if is a petitioner
+            //check user if is a petitioner and or advocate
 
             $petitioner = Auth::user()->petitioner;
+            $advocate = Auth::user()->is_advocate;
 
             if($petitioner > 0){
-                return redirect()->intended('auth/advocate-profile');
+                if($advocate > 0){
+                    return redirect()->intended('auth/advocate-profile');
+                }else{
+                    return redirect()->intended('auth/petitioner-profile');
+                }
             }else{
               return redirect()->intended('auth/dashboard');
             }
@@ -100,6 +123,11 @@ class AuthController extends Controller
         return Redirect::to("login")->with('warning','You have entered invalid username or password');
     }
 
+    /**
+     * advocate register
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
     public function AdvocatePostRegistration(Request $request)
     {
         request()->validate([
@@ -116,6 +144,11 @@ class AuthController extends Controller
         return Redirect::to("login")->with('success','We have sent you an activation link, please check your email.');
     }
 
+    /**
+     * view dashboard
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
     public function get_dashboard()
     {
       if(Auth::check()){
@@ -196,8 +229,12 @@ class AuthController extends Controller
       return Redirect::to("auth/login")->withErrors('You do not have access!');
     }
 
-
-    public function advocate_profile()
+    /**
+     * view petitioner profile
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
+    public function petitioner_profile()
     {
       if(Auth::check()){
         $user_id = Auth::user()->id;
@@ -210,7 +247,7 @@ class AuthController extends Controller
         $progress = ApplicationMove::where('user_id', $user_id)->first();
         $petition_form = PetitionForm::where('user_id', $user_id)->first();
         //dd($progress);exit;
-        return view('advocates.profile.dashboard', [
+        return view('advocates.profile.petitioner', [
           'profile' => $profile,
           'progress' => $progress,
           'qualification' => $qualification,
@@ -224,7 +261,52 @@ class AuthController extends Controller
       return Redirect::to("auth/login")->withErrors('You do not have access!');
     }
 
-	public function create(array $data)
+
+    /**
+     * view advocate profile
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response
+     */
+    public function advocate_profile()
+    {
+        if(Auth::check()){
+            $user_id = Auth::user()->id;
+            $profile = Profile::where('user_id', $user_id)->first();
+            $qualification = Qualification::where('user_id', $user_id)->first();
+            $attachment = Document::where('user_id', $user_id)->first();
+            $llb = LlbCollege::where('user_id', $user_id)->first();
+            $lst = LstCollege::where('user_id', $user_id)->first();
+            $experience = WorkExperience::where('user_id', $user_id)->first();
+            $progress = ApplicationMove::where('user_id', $user_id)->first();
+            $petition_form = PetitionForm::where('user_id', $user_id)->first();
+
+            $cur_year = date('Y');
+            $profile_id = Profile::where('user_id', $user_id)->first()->id;
+            $advocate = Advocate::where('profile_id', $profile_id)->first();
+
+            $image_url = "http://154.118.230.212/data/tams/profiles/".$profile_id;
+
+            //dd($progress);exit;
+            return view('advocates.profile.dashboard', [
+                'profile' => $profile,
+                'progress' => $progress,
+                'qualification' => $qualification,
+                'experience' => $experience,
+                'llb' => $llb,
+                'lst' => $lst,
+                'attachment' => $attachment,
+                'petition_form' => $petition_form,
+                'cur_year' => $cur_year,
+                'advocate' => $advocate,
+                'image_url' => $image_url,
+                'profile_id' => $profile_id,
+            ]);
+        }
+        return Redirect::to("auth/login")->withErrors('You do not have access!');
+    }
+
+
+    public function create(array $data)
 	{
     $petitioner = 1;
     $uuid = Str::uuid();

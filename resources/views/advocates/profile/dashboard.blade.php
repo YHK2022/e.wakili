@@ -37,35 +37,26 @@
                     <div class="card-body text-center">
                         <div class="profile-pic mb-20">
                             @if(!empty($profile->picture))
-                            <img src="{{ asset('storage/files/'.$profile->picture) }}" width="150" class="rounded-circle" alt="user">
+                            <img src="{{ URL::to('http://154.118.230.212/data/tams/profiles/'.$profile_id.'/'.$profile->picture) }}" width="150" class="rounded-circle" alt="profile">
                             @else
                             <img src="{{ URL::to('images/user.png') }}" width="150" class="rounded-circle" alt="user">
                             @endif
-                            <h5 class="mt-20 mb-0">{{ Auth::user()->full_name }}</h5>
-                            <a style="font-size:17px;color:blue;" href="#" ><strong>Petitioner</strong></a>
+
+                            <h5 class="mt-20 mb-0">
+                                @if ($advocate->paid_year != $cur_year)
+                                    <span class="badge bg-danger" style="color: white">Not Active Since {{$advocate->paid_year}}</span>
+                                @else
+                                    <span class="badge bg-success" style="color: white">Active - {{$advocate->paid_year}}</span>
+                                @endif
+                            </h5>
+
+                                <h5 class="mt-20 mb-0">{{ $advocate->profile->fullname}}</h5>
+                                <h5 class="mt-20 mb-0" style="font-size:17px;color:blue;" ><strong>{{$advocate->status}}</strong></h5>
                         </div>
-                        <div class="badge badge-pill badge-dark">Admission No.</div>
-                        <div class="badge badge-pill badge-dark">Roll No.</div>
+                        <div class="badge badge-pill badge-dark">Admission<br/>{{$advocate->admission}}</div>
+                        <div class="badge badge-pill badge-dark">Roll No.<br/>{{$advocate->roll_no}}</div>
                     </div>
 
-                    <hr class="mb-0">
-                    @if($progress)
-                    <div class="card-body">
-                        <h6 class="mt-30">Application Progress <span class="pull-right">{{$progress->appl_progress}}%</span></h6>
-                        <div class="progress  progress-sm">
-                            <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:{{$progress->appl_progress}}%;"> <span class="sr-only">{{$progress->appl_progress}}% Complete</span> </div>
-                        </div>
-
-                    </div>
-                    @else
-                    <div class="card-body">
-                        <h6 class="mt-30">Application Progress <span class="pull-right">0%</span></h6>
-                        <div class="progress  progress-sm">
-                            <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;"> <span class="sr-only">50% Complete</span> </div>
-                        </div>
-
-                    </div>
-                    @endif
                 </div>
             </div>
             <div class="col-lg-8 col-md-7">
