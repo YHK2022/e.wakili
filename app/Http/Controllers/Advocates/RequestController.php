@@ -271,6 +271,7 @@ class RequestController extends Controller
                     $year = RenewalBatch::where('active', 'true')->first()->year;
                     $batch_id = RenewalBatch::where('active', 'true')->first()->id;
                     $created_by = Auth::user()->id;
+                    $statuses = 0;
 
                     $renew_history = new RenewalHistory();
                     $renew_history->active = "true";
@@ -286,21 +287,31 @@ class RequestController extends Controller
                     //Save application documents
                     if ($request->hasfile('files')) {
                         $files = $request->file('files');
+                        $names = $request->names;
 
-                        foreach ($files as $file) {
+                        foreach ($files as $key => $file) {
 
                             $filename = pathinfo($file, PATHINFO_FILENAME);
                             $extension = $file->getClientOriginalExtension();
                             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
                             $file->storeAs('public/files', $fileNameToStore);
 
+//                            $files[] = Document::create([
+//                                'user_id' => $user_id,
+//                                'file' => $fileNameToStore,
+//                                'name' => $names[$key],
+//                                'author' => $profile_id,
+//                                'upload_date' => $submitdate,
+//                                'status' => $statuses
+//                            ]);
+
                             $document = new Document;
                             $document->user_id = $user_id;
-                            $document->name = $file['names'];
+                            $document->name = $names[$key];
                             $document->file = $fileNameToStore;
                             $document->author = $profile_id;
                             $document->upload_date = $submitdate;
-                            $document->status = $status;
+                            $document->status = $statuses;
                             dd($document);exit;
                             $document->save();
                         }
