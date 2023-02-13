@@ -58,31 +58,55 @@ class AdvocateController extends Controller
             $struck_out = "STRUCK_OUT";
 
             $practising_count = Advocate::where('status','=',$practising)->count();
+            $practising_all = Advocate::where('status', '=', $practising)->paginate(10);
+
             $non_practising_count = Advocate::where('status','=',$non_practising)->count();
+            $non_practising_all = Advocate::where('status', '=', $non_practising)->paginate(10);
+
             $suspended_count = Advocate::where('status','=',$suspended)->count();
+            $suspended_all = Advocate::where('status', '=', $suspended)->paginate(10);
+
             $non_profit_count = Advocate::where('status','=',$non_profit)->count();
+            $non_profit_all = Advocate::where('status', '=', $non_profit)->paginate(10);
+
             $retired_count = Advocate::where('status','=',$retired)->count();
+            $retired_all = Advocate::where('status', '=', $retired)->paginate(10);
+
             $deferred_count = Advocate::where('status','=',$deferred)->count();
+            $deferred_all = Advocate::where('status', '=', $deferred)->paginate(10);
+
             $deceased_count = Advocate::where('status','=',$deceased)->count();
+            $deceased_all = Advocate::where('status', '=', $deceased)->paginate(10);
+
             $struck_out_count = Advocate::where('status','=',$struck_out)->count();
+            $struck_out_all = Advocate::where('status', '=', $struck_out)->paginate(10);
+
             $all_count = Advocate::all()->count();
-            $all_advocates = Advocate::orderBy('roll_no')->get();
+            $all_advocates = Advocate::orderBy('roll_no')->paginate(10);
 
             //List advocates base on their status
 
-            $advocates = Advocate::orderBy('roll_no')->get();
+            // $advocates = Advocate::orderBy('roll_no')->paginate(100);
 
-            //dd($all);exit;
+            // dd($advocates);
+            // exit;
             return view('management.advocate.index', [
-                'advocates' => $advocates,
+                // 'advocates' => $advocates,
                 'profile' => $profile,
                 'practising_count' => $practising_count,
+                'practising_all' => $practising_all,
                 'non_practising_count' => $non_practising_count,
+                'non_practising_all' => $non_practising_all,
                 'suspended_count' => $suspended_count,
+                'suspended_all' => $suspended_all,
                 'non_profit_count' => $non_profit_count,
+                'non_profit_all' => $non_profit_all,
                 'retired_count' => $retired_count,
+                'retired_all' => $retired_all,
                 'deferred_count' => $deferred_count,
+                'deferred_all' => $deferred_all,
                 'deceased_count' => $deceased_count,
+                'deceased_all' => $deceased_all,
                 'struck_out_count' => $struck_out_count,
                 'all_count' => $all_count,
                 'all_advocates' => $all_advocates,

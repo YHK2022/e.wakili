@@ -111,12 +111,12 @@ class PetitionSessionController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response
      */
-    public function delete_permission(Request $request, $id)
+    public function delete_session(Request $request, $id)
     {
         if(Auth::check()){
 
             try {
-                $permission = Permission::findOrFail($id);
+                $permission = PetitionSession::findOrFail($id);
                 $permission->delete();
 
                 return back()->with('success', 'User permission deleted successfully');
@@ -132,4 +132,3 @@ class PetitionSessionController extends Controller
 
 
 }
-

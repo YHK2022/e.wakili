@@ -49,32 +49,34 @@
                     </button>
                 </div>
             @endif
-            @if($errors->any())
-                @foreach($errors->all() as $error)
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
                         {{ $error }}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <i class="ik ik-x"></i>
                         </button>
                     </div>
-            @endforeach
-        @endif
+                @endforeach
+            @endif
 
-        <!-- End Alert-->
+            <!-- End Alert-->
             <div>
                 <a data-toggle="modal" data-target="#addStage" title="Add Stage" class="btn btn-info btn-xm pull-right">
                     <i class="fa fa-plus"></i>
                     Add Stage
                 </a>
                 <!-- Add Stage Model-->
-                <div class="modal fade" id="addStage" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
+                <div class="modal fade" id="addStage" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel"
+                    aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
-                            <form class="forms-sample" method="POST" action="{{ url('settings/stage/add')}}">
+                            <form class="forms-sample" method="POST" action="{{ url('settings/stage/add') }}">
                                 {{ csrf_field() }}
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="demoModalLabel">Add Action Stage</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
                                 </div>
                                 <div class="modal-body">
 
@@ -82,13 +84,15 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="exampleInputPassword1">Name</label>
-                                                <input type="text"  name="name" class="form-control  is-valid" placeholder="Stage Name" required>
+                                                <input type="text" name="name" class="form-control  is-valid"
+                                                    placeholder="Stage Name" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="exampleInputConfirmPassword1">Display Name</label>
-                                                <input type="text"  name="display_name" class="form-control  is-valid" placeholder="Stage Display Name" required>
+                                                <input type="text" name="display_name" class="form-control  is-valid"
+                                                    placeholder="Stage Display Name" required>
                                             </div>
                                         </div>
                                     </div>
@@ -103,96 +107,120 @@
                     </div>
                 </div>
             </div>
-            <br/>
+            <br />
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
                             <table class="table table-hover" id="table_id">
                                 <thead>
-                                <tr>
-                                    <th id="table_id" data-priority="1">#</th>
-                                    <th id="table_id">Name</th>
-                                    <th id="table_id">Display Name</th>
-                                    <th id="table_id">Action</th>
-                                </tr>
+                                    <tr>
+                                        <th id="table_id" data-priority="1">#</th>
+                                        <th id="table_id">Name</th>
+                                        <th id="table_id">Display Name</th>
+                                        <th id="table_id">Action</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($stages as $key => $stage)
-                                    <tr>
-                                        <td id="table_id">{{++$key}}</td>
-                                        <td id="table_id">{{$stage->name}}</td>
-                                        <td id="table_id">{{$stage->display_name}}</td>
-                                        <td id="table_id">
-                                            <div class="table-actions">
-                                                    <a href="#edit{{$stage->id}}" title="Edit" data-toggle="modal" data-id="{{ $stage->id }}" data-target="#edit{{$stage->id}}"><i class="ik ik-edit-2"></i></a>
-                                                    <a href="#delete{{$stage->id}}" title="Delete" data-toggle="modal" data-id="{{ $stage->id }}" data-target="#delete{{$stage->id}}"><i class="ik ik-trash-2"></i></a>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    @foreach ($stages as $key => $stage)
+                                        <tr>
+                                            <td id="table_id">{{ ++$key }}</td>
+                                            <td id="table_id">{{ $stage->name }}</td>
+                                            <td id="table_id">{{ $stage->display_name }}</td>
+                                            <td id="table_id">
+                                                <div class="table-actions">
+                                                    <a href="#edit{{ $stage->id }}" title="Edit" data-toggle="modal"
+                                                        data-id="{{ $stage->id }}"
+                                                        data-target="#edit{{ $stage->id }}"><i
+                                                            class="ik ik-edit-2"></i></a>
+                                                    <a href="#delete{{ $stage->id }}" title="Delete"
+                                                        data-toggle="modal" data-id="{{ $stage->id }}"
+                                                        data-target="#delete{{ $stage->id }}"><i
+                                                            class="ik ik-trash-2"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                                    <!-- Edit Session Model-->
-                                    <div class="modal fade" id="edit{{$stage->id}}" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <form class="forms-sample" method="POST" action="{{ url('settings/stage/edit', $stage->id)}}">
-                                                    {{ csrf_field() }}
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="demoModalLabel">Edit Stage</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    </div>
-                                                    <div class="modal-body">
-
-                                                        <div class="row">
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group">
-                                                                    <label for="exampleInputPassword1">Stage Name</label>
-                                                                    <input type="text"  name="open_date" value="{{$stage->name}}" class="form-control  is-valid" placeholder="Open Date" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group">
-                                                                    <label for="exampleInputConfirmPassword1">Display Name</label>
-                                                                    <input type="text"  name="close_date" value="{{$stage->display_name}}" class="form-control  is-valid" placeholder="Close Date" required>
-                                                                </div>
-                                                            </div>
+                                        <!-- Edit Session Model-->
+                                        <div class="modal fade" id="edit{{ $stage->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <form class="forms-sample" method="POST"
+                                                        action="{{ url('settings/stage/edit', $stage->id) }}">
+                                                        {{ csrf_field() }}
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="demoModalLabel">Edit Stage</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close"><span
+                                                                    aria-hidden="true">&times;</span></button>
                                                         </div>
+                                                        <div class="modal-body">
 
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-danger">Edit</button>
-                                                    </div>
-                                                </form>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label for="exampleInputPassword1">Stage
+                                                                            Name</label>
+                                                                        <input type="text" name="name"
+                                                                            value="{{ $stage->name }}"
+                                                                            class="form-control  is-valid"
+                                                                            placeholder="Open Date" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label for="exampleInputConfirmPassword1">Display
+                                                                            Name</label>
+                                                                        <input type="text" name="display_name"
+                                                                            value="{{ $stage->display_name }}"
+                                                                            class="form-control  is-valid"
+                                                                            placeholder="Close Date" required>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-danger">Edit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
 
-                                    <!-- Delete session Model-->
-                                    <div class="modal fade" id="delete{{$stage->id}}" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-sm" role="document">
-                                            <div class="modal-content">
-                                                <form class="forms-sample" method="POST" action="{{ url('settings/stage/delete', $stage->id)}}">
-                                                    {{ csrf_field() }}
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="demoModalLabel">Delete Stage</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Are you sure you want to delete Stage: <strong> {{$stage->name}} </strong>?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-danger">Yes Delete</button>
-                                                    </div>
-                                                </form>
+                                        <!-- Delete session Model-->
+                                        <div class="modal fade" id="delete{{ $stage->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-sm" role="document">
+                                                <div class="modal-content">
+                                                    <form class="forms-sample" method="POST"
+                                                        action="{{ url('settings/stage/delete', $stage->id) }}">
+                                                        {{ csrf_field() }}
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="demoModalLabel">Delete Stage</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close"><span
+                                                                    aria-hidden="true">&times;</span></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to delete Stage: <strong>
+                                                                {{ $stage->name }} </strong>?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-danger">Yes
+                                                                Delete</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-
-                                @endforeach
+                                    @endforeach
 
                                 </tbody>
                             </table>
@@ -205,5 +233,3 @@
     </div>
 
 @endsection
-
-

@@ -213,17 +213,29 @@ Route::group(['prefix' => 'user-management'], function() {
 
     //--User roles ----
     Route::get('/role', 'Management\RoleController@get_index');
-    Route::get('/role/add', 'Management\RoleController@add_role');
+    Route::post('/role/add', 'Management\RoleController@add_role');
     Route::match(['get', 'post'], '/role/edit/{id}', 'Management\RoleController@edit_role');
     Route::match(['get', 'post'], '/role/delete/{id}', 'Management\RoleController@delete_role');
+    Route::get('/role/permission/{id}', 'Management\RoleController@permission');
+    // Route::post('/role/set_permission', 'Management\RoleController@setPermission');
+    Route::post('/role/setPermission', 'Management\RoleController@setPermission');
+
+
+
+
 
     Route::get('/user', 'Management\UserController@get_index');
-
-    Route::get('/cle', 'Management\CleController@get_index');
+    Route::post('/user/add', 'Management\UserController@add_user');
+    Route::match(['get', 'post'], '/user/edit/{id}', 'Management\UserController@edit_user');
+    Route::match(['get', 'post'], '/user/delete/{id}', 'Management\UserController@delete_user');
+    // Route::get('/profile/{id}', 'Management\UserController@profile');
+    Route::post('/update_profile/{id}', 'Management\UserController@profileUpdate');
+    Route::post('/user/changepass/{id}', 'Management\UserController@changePassword');
+    Route::get('/cle-members', 'Management\UserController@get_cle');
 
     Route::get('/advocate-commettee', 'Management\AdvocateCommetteeController@get_index');
 
-    Route::get('/profile', 'Management\UserController@get_profile');
+    Route::get('/profile', 'Management\UserController@profile');
 
     Route::match(['get', 'post'], '/submit-application', 'Advocates\PetitionController@submit_application');
 
@@ -242,22 +254,61 @@ Route::group(['prefix' => 'settings'], function() {
     Route::match(['get', 'post'], '/advocate-category/delete/{id}', 'Management\AdvocateCategoryController@delete_category');
 
     //--Application/Request Types ----
-    Route::get('/request-type', 'Management\RequestTypeController@get_index');
-    Route::post('/request-type/add', 'Management\RequestTypeController@add_request');
-    Route::match(['get', 'post'], '/request-type/edit/{id}', 'Management\RequestTypeController@edit_request');
-    Route::match(['get', 'post'], '/request-type/delete/{id}', 'Management\RequestTypeController@delete_request');
+    Route::get('/request-types', 'Management\RequestTypeController@get_index');
+    Route::post('/request-types/add', 'Management\RequestTypeController@add_request');
+    Route::match(['get', 'post'], '/request-types/edit/{id}', 'Management\RequestTypeController@edit_request');
+    Route::match(['get', 'post'], '/request-types/delete/{id}', 'Management\RequestTypeController@delete_request');
+
+   //--Countries ----
+    Route::get('/country', 'Locations\CountryController@get_index');
+    Route::post('/country/add', 'Locations\CountryController@add_country');
+    Route::match(['get', 'post'], '/country/edit/{id}', 'Locations\CountryController@edit_country');
+    Route::match(['get', 'post'], '/country/delete/{id}', 'Locations\CountryController@delete_country');
+
+//--Fee Type ----
+Route::get('/fee-types', 'Management\FeeTypeController@get_index');
+Route::post('/fee-types/add', 'Management\FeeTypeController@add_feetypes');
+Route::match(['get', 'post'], '/fee-types/edit/{id}', 'Management\FeeTypeController@edit_feetypes');
+Route::match(['get', 'post'], '/fee-types/delete/{id}', 'Management\FeeTypeController@delete_feetypes');
+
+//--Fee ----
+Route::get('/fees', 'Management\FeeController@get_index');
+Route::post('/fees/add', 'Management\FeeController@add_fees');
+Route::match(['get', 'post'], '/fees/edit/{id}', 'Management\FeeController@edit_fees');
+Route::match(['get', 'post'], '/fees/delete/{id}', 'Management\FeeController@delete_fees');
+
+
+
+
+    //--Attachments ----
+Route::get('/attachment', 'Management\AttachmentTypeController@get_index');
+Route::post('/attachment/add', 'Management\AttachmentTypeController@add_attachment');
+Route::match(['get', 'post'], '/attachment/edit/{id}', 'Management\AttachmentTypeController@edit_attachment');
+Route::match(['get', 'post'], '/attachment/delete/{id}', 'Management\AttachmentTypeController@delete_attachment');
+
+//--Qualificatins ----
+Route::get('/qualifications', 'Management\QualificationController@get_index');
+Route::post('/qualifications/add', 'Management\QualificationController@add_qualifications');
+Route::match(['get', 'post'], '/qualifications/edit/{id}', 'Management\QualificationController@edit_qualifications');
+Route::match(['get', 'post'], '/qualifications/delete/{id}', 'Management\QualificationController@delete_qualificatins');
+
+   //--Appearance ----
+Route::get('/appearance', 'Management\AppearanceVenueController@get_index');
+Route::post('/appearance/add', 'Management\AppearanceVenueController@add_appearance');
+Route::match(['get', 'post'], '/appearance/edit/{id}', 'Management\AppearanceVenueController@edit_appearance');
+Route::match(['get', 'post'], '/appearance/delete/{id}', 'Management\AppearanceVenueController@delete_appearance');
 
     //--Regions ----
-    Route::get('/region', 'Management\RegionController@get_index');
-    Route::post('/region/add', 'Management\RegionController@add_region');
-    Route::match(['get', 'post'], '/region/edit/{id}', 'Management\RegionController@edit_region');
-    Route::match(['get', 'post'], '/region/delete/{id}', 'Management\RegionController@delete_region');
+    Route::get('/region', 'Locations\RegionController@get_index');
+    Route::post('/region/add', 'Locations\RegionController@add_region');
+    Route::match(['get', 'post'], '/region/edit/{id}', 'Locations\RegionController@edit_region');
+    Route::match(['get', 'post'], '/region/delete/{id}', 'Locations\RegionController@delete_region');
 
     //--Districts ----
-    Route::get('/district', 'Management\DistrictController@get_index');
-    Route::post('/district/add', 'Management\DistrictController@add_district');
-    Route::match(['get', 'post'], '/district/edit/{id}', 'Management\DistrictController@edit_district');
-    Route::match(['get', 'post'], '/district/delete/{id}', 'Management\DistrictController@delete_district');
+    Route::get('/district', 'Locations\DistrictController@get_index');
+    Route::post('/district/add', 'Locations\DistrictController@add_district');
+    Route::match(['get', 'post'], '/district/edit/{id}', 'Locations\DistrictController@edit_district');
+    Route::match(['get', 'post'], '/district/delete/{id}', 'Locations\DistrictController@delete_district');
 
     //--Petition Sessions ----
     Route::get('/petition-session', 'Management\PetitionSessionController@get_index');
@@ -279,9 +330,9 @@ Route::group(['prefix' => 'settings'], function() {
 
     //--Action Stages ----
     Route::get('/stage', 'Management\StageController@get_index');
-    Route::post('/stage/add', 'Management\StageController@add_session');
-    Route::match(['get', 'post'], '/stage/edit/{id}', 'Management\StageController@edit_session');
-    Route::match(['get', 'post'], '/stage/delete/{id}', 'Management\StageController@delete_session');
+    Route::post('/stage/add', 'Management\StageController@add_stage');
+    Route::match(['get', 'post'], '/stage/edit/{id}', 'Management\StageController@edit_stage');
+    Route::match(['get', 'post'], '/stage/delete/{id}', 'Management\StageController@delete_stage');
 
 
 
@@ -309,6 +360,24 @@ Route::group(['prefix' => 'petition'], function() {
 
 
 });
+//****Petition Report Routes Start****** //
+Route::group(['prefix' => 'report'], function() {
+
+    //-- Petition ----
+    Route::get('/petition', 'Reports\ReportController@petition');
+    Route::get('/advocate', 'Reports\ReportController@advocate');
+    Route::get('/permit', 'Reports\ReportController@permit');
+    Route::get('/revenue', 'Reports\ReportController@revenue');
+
+
+    Route::match(['get', 'post'], '/view/{id}', 'Management\PetitionApplicationController@view_profile');
+
+
+});
+
+
+
+
 //****Petition Applications Routes Ends****** //
 
 

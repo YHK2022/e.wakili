@@ -6,7 +6,9 @@ use App\Profile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use App\RoleUser;
+use App\Roles;
+use App\Models\Masterdata\ActionUserType;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -14,6 +16,8 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
     use HasRoles;
+    // use Notifiable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -110,5 +114,14 @@ class User extends Authenticatable implements JWTSubject
     public function experiences()
     {
         return $this->hasMany(WorkExperience::class, 'user_id');
+    }
+public function roles()
+    {
+        return $this->belongsToMany(Roles::class, 'role_users', 'user_id', 'role_id');
+    }
+    
+    public function actionusers()
+    {
+        return $this->belongsToMany(ActionUserType::class, 'action_user_type_users', 'action_user_type_id', 'user_id');
     }
 }

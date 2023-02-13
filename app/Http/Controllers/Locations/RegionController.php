@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Locations;
 use App\Http\Controllers\Controller;
 use App\Models\Masterdata\Region;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use App\Profile;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegionController extends Controller
@@ -18,14 +21,12 @@ class RegionController extends Controller
         if ($request->input('all')) {
             $regions = Region::orderBy('id', 'asc')->get();
         } else {
-            $regions = Region::with('districts')->paginate(10);
+            $regions = Region::with('districts')->get();
         }
+           return view('management.masterdata.region.index', compact('regions'));
+}
 
-        return response()->json([
-            'code' => Response::HTTP_OK,
-            'region' => $regions
-        ], 200);
-    }
+
 
     /**
      * add a new region
@@ -34,23 +35,28 @@ class RegionController extends Controller
      */
     public function add_region(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique,regions,name',
-            'code' => 'required',
-            'zone_id' => 'required'
-        ]);
+       if (Auth::check()) {
 
-        $region = new Region();
-        $region->name = $request->input('name');
-        $region->code = $request->input('code');
-        $region->zone_id = $request->input('zone_id');
-        $region->save();
+    $this->validate($request, [
+        'name' => 'required',
+    ]);
 
-        return response()->json([
-            'code' => Response::HTTP_CREATED,
-            'message' => 'Region created successfully',
-            'region' => $region
-        ], 201);
+    $uuid = Str::uuid();
+
+    $attachment = new Region();
+    $attachment->name = $request->input('name');
+    $attachment->created_by = Auth()->user()->id;
+    $attachment->active = 'true';
+    $attachment->uid = $uuid;
+
+    //dd($fee-types);exit;
+    $attachment->save();
+
+    return back()->with('success', 'Region added successfully');
+
+}
+return Redirect::to("auth/login")->withErrors('You do not have access!');
+
     }
 
     /**
@@ -81,33 +87,34 @@ class RegionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function edit_region(Request $request, $id)
     {
-        try {
-            $region = Region::findOrFail($id);
+        if (Auth::check()) {
 
-            $this->validate($request, [
-                'name' => 'required',
-                'code' => 'required',
-                'zone_id' => 'required'
-            ]);
+    try {
 
-            $region->name = $request->input('name');
-            $region->code = $request->input('code');
-            $region->zone_id = $request->input('zone_id');
-            $region->save();
+        $region = Region::findOrFail($id);
 
-            return response()->json([
-                'code' => Response::HTTP_OK,
-                'message' => 'Region updated successfully',
-                'region' => $region
-            ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'code' => Response::HTTP_NOT_FOUND,
-                'error' => 'Not found.'
-            ], 404);
-        }
+        $this->validate($request, [
+            'name' => 'required',
+
+        ]);
+
+        $region->name = $request->input('name');
+        $region->save();
+
+        return back()->with('success', 'Region edited successfully');
+
+    } catch (\Throwable $th) {
+
+        return back()->with('warning', 'Region not edited');
+    }
+
+}
+return Redirect::to("auth/login")->withErrors('You do not have access!');
+
+            
     }
 
     /**
@@ -117,19 +124,21 @@ class RegionController extends Controller
      */
     public function delete_region($id)
     {
-        try {
-            $region = Region::findOrFail($id);
-            $region->delete();
+       if (Auth::check()) {
 
-            return response()->json([
-                'code' => Response::HTTP_OK,
-                'message' => 'Region deleted successfully.'
-            ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'code' => Response::HTTP_NOT_FOUND,
-                'error' => 'Not found.'
-            ], 404);
-        }
+    try {
+        $region = Region::findOrFail($id);
+        $region->delete();
+
+        return back()->with('success', 'Region deleted successfully');
+
+    } catch (\Throwable $th) {
+
+        return back()->with('warning', 'Region not deleted');
+    }
+
+}
+return Redirect::to("auth/login")->withErrors('You do not have access!');
+
     }
 }

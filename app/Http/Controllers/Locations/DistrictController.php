@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Locations;
 
 use App\Http\Controllers\Controller;
 use App\Models\Masterdata\District;
+use App\Models\Masterdata\Region;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\Response;
 
 class DistrictController extends Controller
@@ -18,13 +22,13 @@ class DistrictController extends Controller
         if ($request->input('all')) {
             $districts = District::orderBy('id', 'asc')->get();
         } else {
-            $districts = District::paginate(10);
-        }
+            $districts = District::get();
+            $regions = Region::get();
 
-        return response()->json([
-            'code' => Response::HTTP_OK,
-            'district' => $districts
-        ], 200);
+
+        }
+        return view('management.masterdata.district.index', compact('districts','regions'));
+
     }
 
     /**
@@ -34,23 +38,29 @@ class DistrictController extends Controller
      */
     public function add_district(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:districts,name',
-            'code' => 'required',
-            'region_id' => 'required'
-        ]);
+        if (Auth::check()) {
 
-        $district = new District();
-        $district->name = $request->input('name');
-        $district->code = $request->input('code');
-        $district->region_id = $request->input('region_id');
-        $district->save();
+    $this->validate($request, [
+        'name' => 'required',
+        'region_id' => 'required',
+    ]);
 
-        return response()->json([
-            'code' => Response::HTTP_CREATED,
-            'message' => 'District created successfully.',
-            'district' => $district
-        ], 201);
+    $uuid = Str::uuid();
+
+    $district = new District();
+    $district->name = $request->input('name');
+    $district->region_id = $request->input('region_id');
+    $district->created_by = Auth()->user()->id;
+    $district->active = 'true';
+    $district->deleted = 'false';
+    $district->uid = $uuid;
+    $district->save();
+
+    return back()->with('success', 'District added successfully');
+
+}
+return Redirect::to("auth/login")->withErrors('You do not have access!');
+
     }
 
     /**
@@ -117,19 +127,21 @@ class DistrictController extends Controller
      */
     public function delete_district($id)
     {
-        try {
-            $district = District::findOrFail($id);
-            $district->delete();
+        if (Auth::check()) {
 
-            return response()->json([
-                'code' => Response::HTTP_OK,
-                'message' => 'District deleted successfully.'
-            ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'code' => Response::HTTP_NOT_FOUND,
-                'error' => 'Not found.'
-            ], 404);
-        }
+    try {
+        $district = District::findOrFail($id);
+        $district->delete();
+
+        return back()->with('success', 'District deleted successfully');
+
+    } catch (\Throwable $th) {
+
+        return back()->with('warning', 'District not deleted');
+    }
+
+}
+return Redirect::to("auth/login")->withErrors('You do not have access!');
+
     }
 }

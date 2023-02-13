@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Profile;
 use App\User;
+use Illuminate\Support\Str;
+use App\Roles;
+use App\RoleUser;
+use App\ActionUserTypeUser;
+use App\Models\Masterdata\ActionUserType;
+
+use Illuminate\Support\Facades\DB;
+
 
 
 class UserController extends Controller
@@ -18,26 +26,80 @@ class UserController extends Controller
      * get a listing of users.
      * @return \Illuminate\Http\Response
      */
-    public function get_index() {
+    public function get_index(Request $request) {
 
         if(Auth::check()){
             $user_id = Auth::user()->id;
             $profile = Profile::where('user_id', $user_id)->first();
+            $permissions = Permission::orderBy('name')->get();
 
             $users = User::orderBy('full_name')->get();
+            $usertypes = ActionUserType::orderBy('name')->get();
+
             $roles = Role::where('name','<>','super-admin')->orderBy('name')->get();
             //dd($users);exit;
 
-            // List staff users
+           
+                $staffs = User::select('users.id', 'users.full_name', 'users.email',
+                              'users.phone_number', 'users.username',
+                               'ru.role_id')
+                              ->join('role_users as ru', 'ru.user_id', '=', 'users.id')
+                              ->join('roles as ro', 'ro.id', '=', 'ru.role_id')
+                              ->groupBy('users.id','ru.role_id')
+                              ->with('roles')
+                              ->paginate(1000);
 
-            $staffs = User::orderBy('full_name')->hasRole('admin')->get();
+                $nonstaffs = User::select('users.id', 'users.full_name', 'users.email',
+                              'users.phone_number', 'users.username',
+                               'ru.role_id')
+                              ->join('role_users as ru', 'ru.user_id', '=', 'users.id')
+                              ->join('action_user_type_users as ac', 'ac.user_id', '=', 'users.id')
+                              ->paginate(10);
 
-            dd($staffs);exit;
+                $cle = User::select('users.id', 'users.full_name', 'users.email',
+                              'users.phone_number', 'users.username',
+                               'ru.role_id')
+                              ->join('role_users as ru', 'ru.user_id', '=', 'users.id')
+                              ->join('action_user_type_users as ac', 'ac.user_id', '=', 'users.id')
+                              ->paginate(100);
 
-            return view('management.user_management.permission.index', [
+                       // dd($staffs);
+
+                //       $users = User::with('roles')->get();
+                //  dd($users);
+            return view('management.user_management.users.index', [
                 'profile' => $profile,
                 'permissions' => $permissions,
                 'roles' => $roles,
+                // 'users' => $users,
+                'staffs'=> $staffs,
+                'usertypes' => $usertypes,
+            ]);
+        }
+        return Redirect::to("auth/login")->withErrors('You do not have access!');
+    }
+
+
+
+    public function get_cle()
+    {
+        if(Auth::check()){
+            $user_id = Auth::user()->id;
+            $usertypes = ActionUserType::orderBy('name')->get();
+            $roles = Role::where('name', '<>', 'super-admin')->orderBy('name')->get();
+            $cles = User::select('users.id', 'users.full_name', 'users.email',
+                              'users.phone_number', 'users.username','ac.action_user_type_id')
+                              ->join('action_user_type_users as ac', 'ac.user_id', '=', 'users.id')
+                              ->where('action_user_type_id', 5)
+                              ->with('actionusers')
+                              ->get();
+
+                    //    dd($cles);
+
+            return view('management.user_management.users.cle-members', [
+                'cles' => $cles,
+                'usertypes' => $usertypes,
+                'roles' => $roles
             ]);
         }
         return Redirect::to("auth/login")->withErrors('You do not have access!');
@@ -48,27 +110,44 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response
      */
-    public function add_permission(Request $request)
+    public function add_user(Request $request)
     {
 
         if(Auth::check()){
+$uuid = Str::uuid();
+$request->request->add(['password' => bcrypt($request->get('password'))]);
+$request->request->add(['active' => 'true']);
+$request->request->add(['enabled' => 'true']);
+$request->request->add(['account_non_expired' => 'true']);
+$request->request->add(['account_non_locked' => 'true']);
+$request->request->add(['credentials_non_expired' => 'true']);
+$request->request->add(['uid' => $uuid]);
+$user = User::create($request->all());
+$request->request->add(['user_id' => $user->id]);
 
-            $this->validate($request, [
-                'name' => 'required',
-                'display_name' => 'required',
-                'group_name' => 'required',
-                'guard_name' => 'required',
-            ]);
+$usertypeuser = RoleUser::create([
+    "user_id" => $user->id,
+    "role_id" => $request->role_id,
+]);
 
-            $permission = new Permission();
-            $permission->name = $request->input('name');
-            $permission->display_name = $request->input('display_name');
-            $permission->group_name = $request->input('group_name');
-            $permission->guard_name = $request->input('guard_name');
-            //dd($permission);exit;
-            $permission->save();
+ActionUserTypeUser::create([
+    "user_id" => $user->id,
+    "action_user_type_id" => $request->action_user_type_id,
+]);
 
-            return back()->with('success', 'User permission added successfully');
+// $roles = [];
+// if ($request->get('role')) {
+//     foreach ($request->get('role') as $role) {
+//         $roles[$role] = [
+//             'user_id' => $user->id,
+//             'role_id' => $role,
+//         ];
+//     }
+// }
+
+// $user->userRole()->sync($roles);
+
+            return back()->with('success', 'User added successfully');
 
         }
         return Redirect::to("auth/login")->withErrors('You do not have access!');
@@ -80,29 +159,41 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response
      */
-    public function edit_permission(Request $request, $id)
+    public function edit_user(Request $request, $id)
     {
 
         if(Auth::check()){
 
             try {
-                $permission = Permission::findOrFail($id);
-
                 $this->validate($request, [
-                    'name' => 'required',
-                    'display_name' => 'required',
-                    'group_name' => 'required',
-                    'guard_name' => 'required',
-                ]);
+            'full_name' => [
+                'max:255',
+                Rule::unique('users')->ignore($id)->where(function ($query) {
+                    return $query->where('is_deleted', false);
+                }),
+            ],
+            'email' => [
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($id)->where(function ($query) {
+                    return $query->where('is_deleted', false);
+                }),
+            ],
+        ]);
 
-                $permission->name = $request->input('name');
-                $permission->display_name = $request->input('display_name');
-                $permission->group_name = $request->input('group_name');
-                $permission->guard_name = $request->input('guard_name');
-                //dd($permission);exit;
-                $permission->save();
+        $input = $request->except('password');
+        if (!isset($input['active'])) {
+            $input['active'] = false;
+        }
 
-                return back()->with('success', 'User permission edited successfully');
+        if (!empty($request['password'])) {
+            $input['password'] = bcrypt($request['password']);
+        }
+
+        $lims_user_data = User::find($id);
+        $lims_user_data->update($input);
+
+                return back()->with('success', 'User  edited successfully');
 
             } catch (\Throwable $th) {
 
@@ -119,25 +210,76 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response
      */
-    public function delete_permission(Request $request, $id)
+    public function delete_user(Request $request, $id)
     {
         if(Auth::check()){
 
             try {
-                $permission = Permission::findOrFail($id);
-                $permission->delete();
+                $user = User::findOrFail($id);
+                $user->delete();
 
-                return back()->with('success', 'User permission deleted successfully');
+                return back()->with('success', 'User  deleted successfully');
 
             } catch (\Throwable $th) {
 
-                return back()->with('warning', 'User permission not deleted');
+                return back()->with('warning', 'User not deleted');
             }
 
         }
         return Redirect::to("auth/login")->withErrors('You do not have access!');
     }
 
+    public function profile()
+    {
+        
+       if (Auth::check()) {
+            $lims_user_data = User::where('id', Auth()->user()->id)->first();
+            //  $staffs = User::select('users.id', 'users.full_name', 'users.email',
+            //                   'users.phone_number', 'users.username',
+            //                    'ru.role_id')
+            //                   ->join('role_user as ru', 'ru.user_id', '=', 'users.id')
+            //                   ->join('roles as ro', 'ro.role_id', '=', 'ru.id')
+            //                   ->where('id', auth()->user()->id)
+            //                    ->get();
+            // $role = DB::table('roles')->find($staffs->role_id);
+            // dd($staffs);
+            return view('management.user_management.users.profile', compact('lims_user_data'));
+        } else {
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
+        }
+
+    }
+
+    public function profileUpdate(Request $request, $id)
+    {
+        // if(!env('USER_VERIFIED'))
+        //     return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
+
+        $input = $request->all();
+        $lims_user_data = User::find($id);
+        $lims_user_data->update($input);
+                return back()->with('success', 'Profile  edited successfully');
+    }
+
+    public function changePassword(Request $request, $id)
+    {
+        // if(!env('USER_VERIFIED'))
+        //     return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
+
+        $input = $request->all();
+        $lims_user_data = User::find($id);
+        if ($input['new_pass'] != $input['confirm_pass']) {
+            return redirect("user/" . "profile/" . $id)->with('success', "Please Confirm your new password");
+        }
+
+        if (Hash::check($input['current_pass'], $lims_user_data->password)) {
+            $lims_user_data->password = bcrypt($input['new_pass']);
+            $lims_user_data->save();
+        } else {
+            return redirect("user/" . "profile/" . $id)->with('success', "Current Password doesn't match");
+        }
+        auth()->logout();
+        return redirect('/');
+    }
 
 }
-

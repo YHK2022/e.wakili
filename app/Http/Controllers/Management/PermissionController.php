@@ -25,6 +25,7 @@ class PermissionController extends Controller
 
             $permissions = Permission::orderBy('name')->get();
             $roles = Role::where('name','<>','super-admin')->orderBy('name')->get();
+            // dd($permissions);
             //dd($profile);exit;
             return view('management.user_management.permission.index', [
                 'profile' => $profile,

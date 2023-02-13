@@ -43,29 +43,28 @@ class StageController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response
      */
-    public function add_session(Request $request)
+    public function add_stage(Request $request)
     {
 
         if(Auth::check()){
 
             $this->validate($request, [
-                'open_date' => 'required',
-                'close_date' => 'required',
-                'admission_date' => 'required',
+                'name' => 'required',
+                'display_name' => 'required',
             ]);
 
             $uuid = Str::uuid();
 
-            $session = new PetitionSession();
-            $session->open_date = $request->input('open_date');
-            $session->close_date = $request->input('close_date');
-            $session->admission_date = $request->input('admission_date');
+            $session = new ActionUserType();
+            $session->name = $request->input('name');
+            $session->display_name = $request->input('display_name');
+            $session->created_by = Auth()->user()->id;
             $session->uid = $uuid;
             $session->active = "true";
             //dd($session);exit;
             $session->save();
 
-            return back()->with('success', 'Petition Session added successfully');
+            return back()->with('success', 'Stage added successfully');
 
         }
         return Redirect::to("auth/login")->withErrors('You do not have access!');
@@ -77,32 +76,32 @@ class StageController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response
      */
-    public function edit_session(Request $request, $id)
+    public function edit_stage(Request $request, $id)
     {
 
         if(Auth::check()){
 
             try {
 
-                $session = PetitionSession::findOrFail($id);
+                $stage = ActionUserType::findOrFail($id);
 
                 $this->validate($request, [
-                    'open_date' => 'required',
-                    'close_date' => 'required',
-                    'admission_date' => 'required',
+                'name' => 'required',
+                'display_name' => 'required',
                 ]);
 
-                $session->open_date = $request->input('open_date');
-                $session->close_date = $request->input('close_date');
-                $session->admission_date = $request->input('admission_date');
-                //dd($session);exit;
-                $session->save();
+                 $stage->name = $request->input('name');
+                 $stage->display_name = $request->input('display_name');
+                 $stage->updated_by = Auth()->user()->id;
 
-                return back()->with('success', 'Petition Session edited successfully');
+                //dd($stage);exit;
+                $stage->save();
+
+                return back()->with('success', ' stage edited successfully');
 
             } catch (\Throwable $th) {
 
-                return back()->with('warning', 'Petition Session not edited');
+                return back()->with('warning', 'Stage not edited');
             }
 
         }
@@ -115,19 +114,19 @@ class StageController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response
      */
-    public function delete_permission(Request $request, $id)
+    public function delete_stage(Request $request, $id)
     {
         if(Auth::check()){
 
             try {
-                $permission = Permission::findOrFail($id);
-                $permission->delete();
+                $stage = ActionUserType::findOrFail($id);
+                $stage->delete();
 
-                return back()->with('success', 'User permission deleted successfully');
+                return back()->with('success', 'Stage deleted successfully');
 
             } catch (\Throwable $th) {
 
-                return back()->with('warning', 'User permission not deleted');
+                return back()->with('warning', 'Stage not deleted');
             }
 
         }
@@ -136,5 +135,3 @@ class StageController extends Controller
 
 
 }
-
-
